@@ -43,7 +43,6 @@ const FolderCard = ({
   useEffect(() => {
     setFolderLinks(links);
   }, [links]);
-  console.log("linkcount", linkCounts[folder.$id]);
 
   const handleToggle = () => {
     onToggleExpand();
@@ -97,7 +96,6 @@ const FolderCard = ({
   const handleBookmark = async (folder) => {
     try {
       await toggleBookmark(folder.$id);
-      console.log("Booking toggled");
       showAlert("Bookmark updated successfully!", "success");
     } catch (err) {
       console.error("Error toggling bookmark:", err);

@@ -35,7 +35,6 @@ export const AuthProvider = ({ children }) => {
         password,
         name,
       });
-      console.log("signup", user);
 
       await account.createEmailPasswordSession({
         email,
@@ -68,14 +67,10 @@ export const AuthProvider = ({ children }) => {
 
   //Goggle Login / Signup
   const AuthWithGoogle = async () => {
-    try {
-      const successUrl = window.location.origin + "/dashboard";
-      const failureUrl = window.location.origin + "/login";
-      await account.createOAuth2Session("google", successUrl, failureUrl);
-    } catch (err) {
-      console.error("Google login error:", err);
-      throw err;
-    }
+    const origin = window.location.origin;
+    const successUrl = `${origin}/auth/callback`;
+    const failureUrl = `${origin}/login`;
+    account.createOAuth2Token("google", successUrl, failureUrl);
   };
 
   //Logout
@@ -115,14 +110,12 @@ export const AuthProvider = ({ children }) => {
 
   const syncProfile = async (currentUser) => {
     try {
-      console.log("currentUser", currentUser);
       const existing = await tablesDB.listRows({
         databaseId: DATABASE_ID,
         tableId: "profiles",
         queries: [Query.equal("userId", currentUser.$id)],
       });
 
-      console.log("existing", existing);
       if (existing.rows.length === 0) {
         await saveUserProfile(
           currentUser.$id,
@@ -139,16 +132,14 @@ export const AuthProvider = ({ children }) => {
   };
 
   useEffect(() => {
-    console.log("hii");
-
-    const handleOAuth = async () => {
+    const handleInitialLoad = async () => {
       const currentUser = await checkUserStatus();
       if (currentUser) {
         await syncProfile(currentUser);
       }
     };
 
-    handleOAuth();
+    handleInitialLoad();
   }, []);
 
   const value = {
@@ -160,6 +151,9 @@ export const AuthProvider = ({ children }) => {
     login,
     logout,
     saveUserProfile,
+    syncProfile,
+
+    //68ff942a003df3d3735e
   };
 
   if (loading) {

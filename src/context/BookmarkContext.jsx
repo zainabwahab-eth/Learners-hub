@@ -33,7 +33,6 @@ export const BookmarkProvider = ({ children }) => {
           Query.offset(currentOffset),
         ],
       });
-      console.log("fetch bookmarks", response);
       const bookmarks = response.rows || [];
 
       if (bookmarks.length < 10) setHasMore(false);
@@ -82,9 +81,6 @@ export const BookmarkProvider = ({ children }) => {
             rowId: bookmark.folderId,
           });
 
-          console.log("folderId", bookmark.folderId);
-          console.log("folderRes", folderRes);
-
           // Check if folder is shared
           if (!folderRes.isShared) {
             console.warn("Folder is not shared:", folderRes.$id);
@@ -100,7 +96,6 @@ export const BookmarkProvider = ({ children }) => {
               queries: [Query.equal("userId", folderRes.ownerId)],
             });
             ownerProfile = profileRes.rows[0] || null;
-            console.log("profileres", profileRes);
           } catch (err) {
             console.warn("No profile found for owner:", folderRes.ownerId, err);
           }
@@ -153,7 +148,6 @@ export const BookmarkProvider = ({ children }) => {
           isBookmarked: true,
         },
       });
-      console.log("add bookmark", response);
       setBookMarkedFolders((prev) => [...prev, response]);
       await fetchBookmarks(0, false);
       return response;
@@ -183,7 +177,6 @@ export const BookmarkProvider = ({ children }) => {
         prev.filter((bookmark) => bookmark.$id !== bookmarkId)
       );
       await fetchBookmarks(0, false);
-      console.log("Bookmark removed");
     } catch (error) {
       console.error("Error removing bookmark:", error);
       throw new Error("Failed to remove bookmark.");
@@ -206,7 +199,6 @@ export const BookmarkProvider = ({ children }) => {
 
   useEffect(() => {
     fetchBookmarks();
-    console.log("bookmark folder", bookmarkedFolders);
   }, [user]);
 
   return (

@@ -5,6 +5,7 @@ import Bookmarks from "./pages/Bookmarks";
 import Community from "./pages/Community";
 import Signup from "./pages/Signup";
 import Login from "./pages/Login";
+import AuthCallback from "./components/AuthCallback";
 import ProtectedRoute from "./components/ProtectedRoutes";
 import { useAuth } from "./context/useContext";
 
@@ -28,6 +29,11 @@ function App() {
         <Route
           path="/login"
           element={user ? <Navigate to="/dashboard" /> : <Login />}
+        />
+
+        <Route
+          path="/auth/callback"
+          element={user ? <Navigate to="/dashboard" /> : <AuthCallback />}
         />
 
         <Route

@@ -36,7 +36,6 @@ export const FolderProvider = ({ children }) => {
           Query.offset(currentOffset),
         ],
       });
-      console.log("fetch", response);
       const sorted = response.rows.sort(
         (a, b) => new Date(b.$createdAt) - new Date(a.$createdAt)
       );
@@ -136,8 +135,6 @@ export const FolderProvider = ({ children }) => {
           ownerId: user.$id,
         },
       });
-      console.log("create folder", response);
-      // setFolders((folders) => [response].slice(0, 10));
       setFolders((prev) => [response, ...prev]);
     } catch (err) {
       console.error("Error creating folders:", err);
@@ -187,9 +184,7 @@ export const FolderProvider = ({ children }) => {
       setOffset(0);
       setHasMore(true);
       fetchFolders(0, false);
-      console.log("hasMore from context", hasMore);
     }
-    console.log(folders);
   }, [user]);
 
   return (

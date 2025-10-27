@@ -39,7 +39,6 @@ const Landing = () => {
     setLoadingLinks((prev) => ({ ...prev, [id]: true }));
     try {
       const fetchedLinks = await fetchLinks(id);
-      console.log("fetchedLinks", fetchedLinks);
       setFolderLinks((prev) => ({ ...prev, [id]: fetchedLinks }));
     } catch (err) {
       console.error("Error fetching links", err);

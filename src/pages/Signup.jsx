@@ -37,7 +37,6 @@ const Signup = () => {
     setIsLoading(true);
     try {
       const newUser = await signup(data.email, data.password, data.name);
-      console.log("newUser", newUser);
 
       await saveUser(newUser);
       navigate("/dashboard");
@@ -51,7 +50,6 @@ const Signup = () => {
   const saveUser = async (user) => {
     try {
       await saveUserProfile(user.$id, user.email, user.name);
-      console.log("User profile successfully saved", user);
     } catch (err) {
       console.error("Error saving user profile", err.message);
     }
