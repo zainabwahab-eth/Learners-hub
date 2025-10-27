@@ -43,12 +43,12 @@ const FolderCard = ({
   useEffect(() => {
     setFolderLinks(links);
   }, [links]);
+  console.log("linkcount", linkCounts[folder.$id]);
 
   const handleToggle = () => {
     onToggleExpand();
     setisFolderExpanded(!isFolderExpanded);
   };
-
 
   const handleDeleteLink = async (linkId, folderId) => {
     try {
@@ -169,10 +169,10 @@ const FolderCard = ({
                       {!isShared && (
                         <button
                           onClick={handlShareModal}
-                          disabled={linkCounts[folder.$id] === undefined}
+                          disabled={linkCounts[folder.$id] === 0}
                           className={`w-full text-left px-4 py-2 rounded-lg font-medium
     ${
-      linkCounts[folder.$id] === undefined
+      linkCounts[folder.$id] === 0
         ? "bg-gray-50 text-gray-500 cursor-not-allowed"
         : "text-gray-700 hover:bg-gray-50 transition-colors"
     }`}

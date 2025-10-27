@@ -27,7 +27,7 @@ const Signup = () => {
       await AuthWithGoogle();
     } catch (err) {
       console.error("Error signing up with google", err);
-      showAlert("Error Signing up. Please try again", error);
+      showAlert("Error Signing up. Please try again", 'error');
     }
   };
 
@@ -44,7 +44,7 @@ const Signup = () => {
     } catch (err) {
       setError("Invalid credentials");
       console.error("Signup error", err.message);
-      showAlert("Error Signing up. Please try again", error);
+      showAlert("Error Signing up. Please try again", 'error');
     }
   };
 
