@@ -2,20 +2,21 @@ import { useState, useEffect } from "react";
 import { ID, Query } from "appwrite";
 import { tablesDB } from "../lib/appwrite";
 import { LinkContext } from "../context/useContext";
-import { useAuth } from "./useContext";
+import { useAuth, useFolder } from "./useContext";
+
+const DATABASE_ID = import.meta.env.VITE_APPWRITE_DATABASE_ID;
+const LINK_COLLECTION_ID = "links";
 
 export const LinkProvider = ({ children }) => {
   const { user } = useAuth();
+  const { updateFolder } = useFolder();
   const [links, setLinks] = useState([]);
   const [loading, setLoading] = useState(false);
   const [linkCounts, setLinkCounts] = useState({});
 
-  const DATABASE_ID = import.meta.env.VITE_APPWRITE_DATABASE_ID;
-  const LINK_COLLECTION_ID = "links";
-
   // Fetch all links for a given folder
   const fetchLinks = async (folderId) => {
-    if (!user || !folderId) return;
+    if (!folderId) return;
     setLoading(true);
     try {
       const response = await tablesDB.listRows({
@@ -27,10 +28,9 @@ export const LinkProvider = ({ children }) => {
       setLinks(folderLinks);
       setLinkCounts((prev) => ({
         ...prev,
-        [folderId]: folderLinks.length,
+        [folderId]: response.total,
       }));
       return folderLinks;
-      // console.log("links", response);
     } catch (err) {
       console.error("Error fetching links:", err);
     } finally {
@@ -38,32 +38,38 @@ export const LinkProvider = ({ children }) => {
     }
   };
 
-  //Fetch the number of links in a folder
-  const fetchAllLinkCounts = async () => {
-    if (!user) return;
+  //Get a folder link
+  const getLinkCount = async (folderId) => {
     try {
       const response = await tablesDB.listRows({
         databaseId: DATABASE_ID,
         tableId: LINK_COLLECTION_ID,
+        queries: [Query.equal("folderId", folderId), Query.limit(1)],
       });
-
-      const counts = {};
-      response.rows.forEach((link) => {
-        const folderId = link.folderId;
-        counts[folderId] = (counts[folderId] || 0) + 1;
-      });
-
-      setLinkCounts(counts);
+      return response.total;
     } catch (err) {
-      console.error("Error fetching link counts:", err);
+      console.error("Error fetching link count:", err);
+      return 0;
     }
+  };
+
+  const fetchLinkCounts = async (folderIds) => {
+    const uniqueIds = [...new Set(folderIds)];
+    const counts = await Promise.all(
+      uniqueIds.map(async (id) => ({ id, count: await getLinkCount(id) }))
+    );
+    const newCounts = counts.reduce((acc, { id, count }) => {
+      acc[id] = count;
+      return acc;
+    }, {});
+    setLinkCounts((prev) => ({ ...prev, ...newCounts }));
   };
 
   // Create a new link
   const createLink = async (folderId, title, url, description) => {
     if (!user) return alert("You must be logged in");
     try {
-      await tablesDB.createRow({
+      const response = await tablesDB.createRow({
         databaseId: DATABASE_ID,
         tableId: LINK_COLLECTION_ID,
         rowId: ID.unique(),
@@ -75,31 +81,19 @@ export const LinkProvider = ({ children }) => {
           ownerId: user.$id,
         },
       });
-      await fetchLinks(folderId);
-      await fetchAllLinkCounts();
-      // setLinks((prev) => [...prev, response]);
-      // setLinkCounts((prev) => ({
-      //   ...prev,
-      //   [folderId]: (prev[folderId] || 0) + 1,
-      // }));
+      setLinkCounts((prev) => ({
+        ...prev,
+        [folderId]: (prev[folderId] || 0) + 1,
+      }));
+      const newCount = await getLinkCount(folderId);
+      setLinkCounts((prev) => ({
+        ...prev,
+        [folderId]: newCount,
+      }));
+      setLinks((prev) => [...prev, response]);
     } catch (err) {
       console.error("Error creating link:", err);
-    }
-  };
-
-  // Update a link
-  const updateLink = async (linkId, updates) => {
-    try {
-      const response = await tablesDB.updateRow({
-        databaseId: DATABASE_ID,
-        tableId: LINK_COLLECTION_ID,
-        rowId: linkId,
-        data: { ...updates },
-      });
-      setLinks((prev) => prev.map((l) => (l.$id === linkId ? response : l)));
-      return response;
-    } catch (err) {
-      console.error("Error updating link:", err);
+      throw new Error("Error creating link.");
     }
   };
 
@@ -111,21 +105,37 @@ export const LinkProvider = ({ children }) => {
         tableId: LINK_COLLECTION_ID,
         rowId: linkId,
       });
-      await fetchLinks(folderId);
-      await fetchAllLinkCounts();
-      // setLinks((prev) => prev.filter((l) => l.$id !== linkId));
-      // setLinkCounts((prev) => ({
-      //   ...prev,
-      //   [folderId]: Math.max((prev[folderId] || 1) - 1, 0),
-      // }));
+      // await fetchLinks(folderId);
+      setLinkCounts((prev) => ({
+        ...prev,
+        [folderId]: Math.max((prev[folderId] || 1) - 1, 0),
+      }));
+      const newCount = await getLinkCount(folderId);
+      setLinkCounts((prev) => ({
+        ...prev,
+        [folderId]: newCount,
+      }));
+      setLinks((prev) => prev.filter((l) => l.$id !== linkId));
+
+      //Delete folder from community if link count = 0
+      if (newCount === 0) {
+        const folder = await tablesDB.getRow({
+          databaseId: DATABASE_ID,
+          tableId: "folders",
+          rowId: folderId,
+        });
+        if (folder.isShared) {
+          await updateFolder(folderId, { isShared: false });
+          console.log(`Folder ${folderId} unshared due to zero links`);
+        }
+      }
     } catch (err) {
       console.error("Error deleting link:", err);
+      throw new Error("Error deleting link.");
     }
   };
 
-  useEffect(() => {
-    // optionally leave this blank and fetch inside FolderDetails
-  }, [user]);
+  useEffect(() => {}, [user]);
 
   return (
     <LinkContext.Provider
@@ -134,10 +144,9 @@ export const LinkProvider = ({ children }) => {
         loading,
         fetchLinks,
         createLink,
-        updateLink,
         deleteLink,
         linkCounts,
-        fetchAllLinkCounts,
+        fetchLinkCounts,
       }}
     >
       {children}

@@ -1,68 +1,73 @@
+import { useEffect, useState } from "react";
 import Nav from "../components/Nav";
-import ResourceCard from "../components/ResourceCard";
 import Footer from "../components/Footer";
 import landingBackground from "../assets/landing-background.svg";
+import { useFolder, useLink } from "../context/useContext";
+import { Link } from "react-router-dom";
+import FolderCard from "../components/FolderCard";
+import { Compass } from "lucide-react";
 
 const Landing = () => {
-  const resources = [
-    {
-      author: "Zainab Wahab",
-      date: "Sept 4",
-      title: "Nodejs Auth Resources",
-      description: "Some resources I'm using to learn backend authentication",
-      linkCount: 7,
-      tags: ["Nodejs", "Express"],
-    },
-    {
-      author: "Zainab Wahab",
-      date: "Sept 4",
-      title: "Nodejs Auth Resources",
-      description: "Some resources I'm using to learn backend authentication",
-      linkCount: 7,
-      tags: ["Nodejs", "Express"],
-    },
-    {
-      author: "Zainab Wahab",
-      date: "Sept 4",
-      title: "Nodejs Auth Resources",
-      description: "Some resources I'm using to learn backend authentication",
-      linkCount: 7,
-      tags: ["Nodejs", "Express"],
-    },
-    {
-      author: "Zainab Wahab",
-      date: "Sept 4",
-      title: "Nodejs Auth Resources",
-      description: "Some resources I'm using to learn backend authentication",
-      linkCount: 7,
-      tags: ["Nodejs", "Express"],
-    },
-  ];
+  const { fetchLinks, fetchLinkCounts } = useLink();
+  const { fetchSharedFolders, sharedFolders } = useFolder();
+  // const [sharedFolders, setSharedFolders] = useState([]);
+  const [folderLinks, setFolderLinks] = useState({});
+  const [loadingLinks, setLoadingLinks] = useState({});
+  const [loading, setLoading] = useState(false);
+
+  useEffect(() => {
+    setLoading(true);
+    const fetch = async () => {
+      try {
+        await fetchSharedFolders();
+      } catch (err) {
+        console.error("Error fetching data:", err);
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetch();
+  }, []);
+
+  useEffect(() => {
+    if (sharedFolders.length > 0) {
+      fetchLinkCounts(sharedFolders.map((f) => f.$id));
+    }
+  }, [sharedFolders, fetchLinkCounts]);
+
+  const handleToggleExpand = async (id) => {
+    setLoadingLinks((prev) => ({ ...prev, [id]: true }));
+    try {
+      const fetchedLinks = await fetchLinks(id);
+      console.log("fetchedLinks", fetchedLinks);
+      setFolderLinks((prev) => ({ ...prev, [id]: fetchedLinks }));
+    } catch (err) {
+      console.error("Error fetching links", err);
+    } finally {
+      setLoadingLinks((prev) => ({ ...prev, [id]: false }));
+    }
+  };
 
   const features = [
     {
-      // icon: <Link2 className="w-8 h-8" />,
       icon: "🔗",
       title: "Save Links Easily",
       description:
         "Add links to your folders and never lose track of great finds.",
     },
     {
-      // icon: <Folder className="w-8 h-8" />,
       icon: "🗃️",
       title: "Organize with Folders",
       description:
         "Categorize links, add descriptions, and use tags for better search.",
     },
     {
-      // icon: <Globe className="w-8 h-8" />,
       icon: "🌍",
       title: "Share with Community",
       description:
         "Publish folders and explore curated collections from others.",
     },
     {
-      // icon: <Bookmark className="w-8 h-8" />,
       icon: "⭐",
       title: "Bookmark What You Love",
       description: "Save shared folders so you can quickly access them later.",
@@ -88,12 +93,12 @@ const Landing = () => {
               one place.
             </h1>
 
-            <button
-              // onClick={()}
-              className="bg-primary text-white px-10 py-2 rounded-full font-semibold text- hover:bg-purple-800 transition-all duration-200 transform hover:scale-105 shadow-lg"
+            <Link
+              to="/login"
+              className="bg-primary text-white px-10 py-2 rounded-full font-semibold cursor-pointer hover:bg-purple-800 transition-all duration-200 transform hover:scale-105 shadow-lg"
             >
               Get Started
-            </button>
+            </Link>
           </div>
         </div>
 
@@ -120,19 +125,43 @@ const Landing = () => {
 
         {/* Shared Resources Section */}
         <div className="bg-primary py-16">
-          <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
             <h2 className="text-2xl font-bold text-white mb-2">
               Shared Resources
             </h2>
             <p className="text-purple-200 mb-10">
               Explore some amazing resources from our community
             </p>
-
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              {resources.map((resource, index) => (
-                <ResourceCard key={index} {...resource} />
-              ))}
-            </div>
+            {loading ? (
+              <div className="text-xl font-semibold text-white">
+                Loading folders...
+              </div>
+            ) : sharedFolders.length > 0 ? (
+              <div className="space-y-6">
+                {sharedFolders.map((folder) => (
+                  <FolderCard
+                    key={folder.$id}
+                    use="community"
+                    folder={folder}
+                    links={folderLinks[folder.$id] || []}
+                    isLoading={loadingLinks[folder.$id]}
+                    onToggleExpand={() => handleToggleExpand(folder.$id)}
+                  />
+                ))}
+              </div>
+            ) : (
+              <div className="flex flex-col items-center justify-center py-16 px-4">
+                <div className="w-20 h-20 bg-gray-700 rounded-full flex items-center justify-center mb-4">
+                  <Compass className="w-10 h-10 text-primary" />
+                </div>
+                <h2 className="text-xl font-semibold text-white mb-2">
+                  No folders shared
+                </h2>
+                <p className="text-white text-center max-w-md mb-6">
+                  No folder shared yet, check back later
+                </p>
+              </div>
+            )}
           </div>
         </div>
       </main>

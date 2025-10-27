@@ -1,8 +1,7 @@
 import { useState } from "react";
 import { useForm } from "react-hook-form";
-import { useNavigate } from "react-router-dom";
-import { useAuth } from "../context/useContext";
-import Footer from "../components/Footer";
+import { useNavigate, Link } from "react-router-dom";
+import { useAuth, useAlert } from "../context/useContext";
 import logo from "../assets/logo.svg";
 import mail from "../assets/mail.svg";
 import lock from "../assets/lock.svg";
@@ -14,23 +13,47 @@ const Signup = () => {
   const navigate = useNavigate();
   const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState("");
-  // const { login } = useAuth();
-  const user = useAuth();
+  const [isLoading, setIsLoading] = useState(false);
+  const { signup, saveUserProfile, AuthWithGoogle } = useAuth();
+  const { showAlert } = useAlert();
   const {
     register,
     handleSubmit,
     formState: { errors },
   } = useForm();
 
+  const handleGoogleAuth = async () => {
+    try {
+      await AuthWithGoogle();
+    } catch (err) {
+      console.error("Error signing up with google", err);
+      showAlert("Error Signing up. Please try again", error);
+    }
+  };
+
   const onSubmit = async (data, e) => {
     e.preventDefault();
     setError("");
+    setIsLoading(true);
     try {
-      await user.login(data.email, data.password, data.name);
+      const newUser = await signup(data.email, data.password, data.name);
+      console.log("newUser", newUser);
+
+      await saveUser(newUser);
       navigate("/dashboard");
     } catch (err) {
       setError("Invalid credentials");
       console.error("Signup error", err.message);
+      showAlert("Error Signing up. Please try again", error);
+    }
+  };
+
+  const saveUser = async (user) => {
+    try {
+      await saveUserProfile(user.$id, user.email, user.name);
+      console.log("User profile successfully saved", user);
+    } catch (err) {
+      console.error("Error saving user profile", err.message);
     }
   };
 
@@ -38,13 +61,13 @@ const Signup = () => {
     <div className="min-h-screen bg-gray-50 flex flex-col">
       <div className="flex-grow flex items-center justify-center px-4 py-12">
         <div className="w-full max-w-md">
-          <div className="text-center mb-8">
-            <a
-              href="/"
+          <div className="text-center mb-4">
+            <Link
+              to="/"
               className="inline-flex items-center justify-center px-4 py-4 bg-gray-200 rounded-full mb-4"
             >
               <img src={logo} alt="Logo" className="w-6 h-6" />
-            </a>
+            </Link>
             <h1 className="text-2xl font-bold text-gray-900 mb-2">
               Get Started
             </h1>
@@ -53,15 +76,24 @@ const Signup = () => {
 
           {error && <p className="text-red-500 text-sm text-center"></p>}
 
-          <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
+          <div className="w-full">
+            {/* Google Button */}
             <button
-              type="button"
-              className="w-full flex items-center justify-center space-x-2 px-6 py-3 border-2 border-gray-300 rounded-xl text-gray-700 font-medium hover:bg-gray-50 transition-colors duration-200"
+              onClick={handleGoogleAuth}
+              className="w-full flex items-center justify-center gap-3 px-6 py-3 border cursor-pointer border-gray-300 rounded-xl text-gray-700 font-medium shadow-sm hover:bg-gray-50 active:bg-gray-100 transition-colors duration-200"
             >
-              <img src={google} alt="Google Icon" className="w-4 h-4" />
-              <span className="text-sm">Signup with google</span>
+              <img src={google} alt="Google Icon" className="w-5 h-5" />
+              <span className="text-sm font-medium">Continue with Google</span>
             </button>
 
+            <div className="flex items-center my-3">
+              <div className="flex-grow border-t border-gray-300"></div>
+              <span className="mx-3 text-gray-500 text-sm font-medium">or</span>
+              <div className="flex-grow border-t border-gray-300"></div>
+            </div>
+          </div>
+
+          <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
             <div className="relative">
               <img
                 src={person}
@@ -140,65 +172,29 @@ const Signup = () => {
 
             <button
               type="submit"
-              className="w-full bg-primary text-white py-3 rounded-full font-medium text-sm hover:bg-purple-800 transition-colors duration-200"
+              className={`w-full py-3 rounded-full font-medium text-sm
+          ${
+            isLoading
+              ? "bg-gray-400 text-gray-600 cursor-not-allowed"
+              : "bg-primary hover:bg-purple-800 text-white transition-colors duration-200"
+          }`}
             >
-              Sign Up
+              {isLoading ? "Signing up..." : "Sign Up"}
             </button>
             <div className="inline-flex items-center justify-center m-auto">
               <p className="text-sm">Already have an account?</p>
-              <a
-                href="/login"
+              <Link
+                to="/login"
                 className="px-2 py-2 text-sm font-medium text-primary rounded-full hover:text-purple-800 transition-colors duration-200"
               >
                 Login
-              </a>
+              </Link>
             </div>
           </form>
         </div>
       </div>
-
-      <Footer />
     </div>
   );
-
-  // return (
-  //   <div className="flex flex-col items-center justify-center min-h-screen">
-  //     <h2 className="text-2xl font-semibold mb-4">Sign Up</h2>
-  //     <form onSubmit={handleSubmit} className="w-80 space-y-4">
-  //       <input
-  //         type="text"
-  //         placeholder="Full Name"
-  //         className="w-full border p-2 rounded"
-  //         value={name}
-  //         onChange={(e) => setName(e.target.value)}
-  //         required
-  //       />
-  //       <input
-  //         type="email"
-  //         placeholder="Email"
-  //         className="w-full border p-2 rounded"
-  //         value={email}
-  //         onChange={(e) => setEmail(e.target.value)}
-  //         required
-  //       />
-  //       <input
-  //         type="password"
-  //         placeholder="Password"
-  //         className="w-full border p-2 rounded"
-  //         value={password}
-  //         onChange={(e) => setPassword(e.target.value)}
-  //         required
-  //       />
-  //       {error && <p className="text-red-500 text-sm">{error}</p>}
-  //       <button
-  //         type="submit"
-  //         className="w-full bg-blue-600 text-white p-2 rounded"
-  //       >
-  //         Create Account
-  //       </button>
-  //     </form>
-  //   </div>
-  // );
 };
 
 export default Signup;

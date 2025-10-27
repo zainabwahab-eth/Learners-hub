@@ -5,7 +5,6 @@ import Bookmarks from "./pages/Bookmarks";
 import Community from "./pages/Community";
 import Signup from "./pages/Signup";
 import Login from "./pages/Login";
-import FolderDetails from "./pages/FolderDetails";
 import ProtectedRoute from "./components/ProtectedRoutes";
 import { useAuth } from "./context/useContext";
 
@@ -31,11 +30,14 @@ function App() {
           element={user ? <Navigate to="/dashboard" /> : <Login />}
         />
 
-        {/* Dashboard */}
-        <Route path="/dashboard" element={<Dashboard />} />
-
-        {/* FOlder details */}
-        <Route path="/folder/:folderId" element={<FolderDetails />} />
+        <Route
+          path="/dashboard"
+          element={
+            <ProtectedRoute>
+              <Dashboard />
+            </ProtectedRoute>
+          }
+        />
 
         {/* Bookmarks */}
         <Route
@@ -47,8 +49,14 @@ function App() {
           }
         />
 
-        {/* Community */}
-        <Route path="/community" element={<Community />} />
+        <Route
+          path="/community"
+          element={
+            <ProtectedRoute>
+              <Community />
+            </ProtectedRoute>
+          }
+        />
       </Routes>
     </BrowserRouter>
   );

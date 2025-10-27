@@ -1,16 +1,8 @@
-import { NavLink } from "react-router-dom";
 import { useAuth } from "../context/useContext";
 import logo from "../assets/logo.svg";
+import { useNavigate, Link, NavLink } from "react-router-dom";
 import { useState } from "react";
 import {
-  Link2,
-  Mail,
-  Lock,
-  User,
-  Eye,
-  EyeOff,
-  Folder,
-  Globe,
   Bookmark,
   ChevronDown,
   ChevronUp,
@@ -18,25 +10,33 @@ import {
   Compass,
   Menu,
   LogOut,
-  MoreVertical,
-  Calendar,
   X,
-  RefreshCw,
-  Trash2,
 } from "lucide-react";
 
 const Nav = ({ type = "app" }) => {
   const [isMobileNavOpen, setIsMobileNavOpen] = useState(false);
   const [isProfileOpen, setIsProfileOpen] = useState(false);
   const { user, logout } = useAuth();
-  //   const user = useAuth();
+  const navigate = useNavigate();
+
+  const handleLogout = async () => {
+    try {
+      await logout();
+      console.log("user succesffully log out");
+      navigate("/login");
+    } catch (err) {
+      alert("Error logging out");
+      console.error("Error logging out", err.message);
+    }
+  };
+
   return (
-    <nav className="relative">
-      <div className="bg-white shadow-sm px-4 lg:px-10 md:px-6 mx-auto py-4 flex justify-around items-center border-b border-gray-200">
-        <div className="flex justify-between items-center gap-2">
+    <nav className="bg-white border-b border-gray-200 sticky top-0 z-20">
+      <div className=" bg-white px-4 md:px-6 max-w-4xl mx-auto py-4 flex justify-between  border-gray-200">
+        <Link className="flex justify-between items-center gap-2" to="/">
           <img src={logo} alt="Logo" className="w-6 h-6" />
           <div className="text-l font-semibold">LinkVault</div>
-        </div>
+        </Link>
         {/* Logo */}
 
         {type === "app" ? (
@@ -53,7 +53,7 @@ const Nav = ({ type = "app" }) => {
               )}
             </button>
             {/* Middle - Nav Links */}
-            <div className="hidden md:flex lg:flex gap-8">
+            <div className="relative hidden md:flex lg:flex gap-8">
               <NavLink
                 to="/dashboard"
                 className={({ isActive }) =>
@@ -75,7 +75,7 @@ const Nav = ({ type = "app" }) => {
                 }
               >
                 <Bookmark className="w-5 h-5" />
-                Bookmarks
+                Bookmark
               </NavLink>
 
               <NavLink
@@ -114,25 +114,24 @@ const Nav = ({ type = "app" }) => {
         ) : (
           // Landing Nav: only login/signup
           <div className="flex items-center gap-4">
-            <a
-              href="/login"
-              className="px-6 py-2 bg-white text-sm font-medium text-primary rounded-full border- border-primary"
+            <Link
+              to="/login"
+              className="px-6 py-2 bg-white text-sm font-medium cursor-pointer text-primary rounded-full border- border-primary"
             >
               Login
-            </a>
-            <a
-              href="/signup"
-              className="px-6 py-2 bg-primary text-sm font-medium text-white rounded-full hover:bg-purple-700 transition-colors duration-200"
+            </Link>
+            <Link
+              to="/signup"
+              className="px-6 py-2 bg-primary text-sm font-medium cursor-pointer text-white rounded-full hover:bg-purple-700 transition-colors duration-200"
             >
               Signup
-            </a>
+            </Link>
           </div>
         )}
       </div>
-
       {/* Mobile Menu */}
       {isMobileNavOpen && (
-        <div className="md:hidden w-full bg-gray-50 shadow-lg shadow-gray-200 rounded-xl border-gray-200 flex flex-col absolute border-t gap-2 space-y-4 py-3 px-6 mt-2">
+        <div className="fixed md:hidden w-full z-[9999] bg-gray-50 shadow-lg shadow-gray-200 rounded-xl border-gray-200 flex flex-col border-t gap-2 space-y-4 py-3 px-6 mt-2">
           <NavLink
             to="/dashboard"
             onClick={() => setIsMobileNavOpen(false)}
@@ -147,7 +146,7 @@ const Nav = ({ type = "app" }) => {
             className="flex items-center px-4 gap-2 text-gray-700 hover:text-purple-700"
           >
             <Bookmark className="w-5 h-5" />
-            BookMark
+            Bookmark
           </NavLink>
           <NavLink
             to="/community"
@@ -169,18 +168,17 @@ const Nav = ({ type = "app" }) => {
             </div>
           </div>
           <button
-            onClick={logout}
-            className="flex items-center px-4 gap-2 text-red-700 hover:text-red-900"
+            onClick={handleLogout}
+            className="flex items-center cursor-pointer px-4 gap-2 text-red-700 hover:text-red-900"
           >
             <LogOut className="w-5 h-5" />
             Logout
           </button>
         </div>
       )}
-
       {/* Profile View */}
       {isProfileOpen && (
-        <div className="bg-gray-50 w-3xs shadow-lg shadow-gray-200 rounded-xl border-gray-200 flex flex-col absolute right-25 space-y-4 py-4 px-3 mt-2">
+        <div className="bg-gray-50 absolute z-[9999] w-3xs shadow-lg rounded-xl border-gray-200 flex flex-col right-25 space-y-4 py-4 px-3 mt-2">
           <div className="flex gap-2">
             <div className="flex flex-col">
               <span className="text-sm font-semibold">{user?.name}</span>
@@ -190,7 +188,7 @@ const Nav = ({ type = "app" }) => {
           <div className="border-1 border-gray-200"></div>
           <button
             onClick={logout}
-            className="flex items-center gap-2 text-red-700 text-sm hover:text-red-900"
+            className="flex items-center cursor-pointer gap-2 text-red-700 text-sm hover:text-red-900"
           >
             <LogOut className="w-4 h-4" />
             Logout

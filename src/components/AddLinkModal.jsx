@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { X } from "lucide-react";
 
-const AddLinkModal = ({ isOpen, onClose, onSubmit }) => {
+const AddLinkModal = ({ isOpen, onClose, isLoading, onSubmit }) => {
   const [title, setTitle] = useState("");
   const [url, setUrl] = useState("");
   const [description, setDescription] = useState("");
@@ -19,11 +19,21 @@ const AddLinkModal = ({ isOpen, onClose, onSubmit }) => {
     setError("");
   };
 
+  const handleModalClick = (e) => {
+    e.stopPropagation();
+  };
+
   return (
-    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 px-4">
-      <div className="bg-white rounded-2xl p-8 w-full max-w-lg">
+    <div
+      className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-50 px-4 transition-opacity duration-300"
+      onClick={onClose}
+    >
+      <div
+        className="bg-white rounded-2xl p-8 w-full max-w-lg"
+        onClick={handleModalClick}
+      >
         <div className="flex justify-between items-center mb-6">
-          <h2 className="text-xl font-bold text-primary">Create Folder</h2>
+          <h2 className="text-xl font-bold text-primary">Add Link</h2>
           <button
             onClick={onClose}
             className="text-gray-400 hover:text-gray-600 transition-colors"
@@ -65,7 +75,7 @@ const AddLinkModal = ({ isOpen, onClose, onSubmit }) => {
             type="submit"
             className="w-full bg-purple-700 text-white py-3 rounded-full font-semibold hover:bg-purple-800 transition-colors duration-200"
           >
-            Add Link
+            {isLoading ? "Adding Link..." : "Add Link"}
           </button>
         </form>
       </div>
