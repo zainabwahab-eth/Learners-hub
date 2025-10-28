@@ -49,6 +49,10 @@ const FolderCard = ({
     setisFolderExpanded(!isFolderExpanded);
   };
 
+  const handleContribute = () => {
+    showAlert("This feature is in progress", "info");
+  };
+
   const handleDeleteLink = async (linkId, folderId) => {
     try {
       if (confirm("Are you sure you want to delete this Link?")) {
@@ -83,6 +87,7 @@ const FolderCard = ({
           tags: folderData.tags,
           isShared: true,
           sharedAt: new Date().toISOString(),
+          allowContribution: folderData.allowContribution || false,
         });
       }
       setIsShareFolderModalOpen(false);
@@ -116,18 +121,28 @@ const FolderCard = ({
             </div>
             <div className="flex items-center gap-2 mb-2">
               {user && (
-                <button
-                  onClick={() => {
-                    handleBookmark(folder);
-                  }}
-                  className="p-2 text-gray-600 hover:bg-gray-100 rounded-lg transition-colors"
-                >
-                  {isBookmarked(folder.$id) ? (
-                    <BookmarkCheck className="w-5 h-5 text-primary" />
-                  ) : (
-                    <Bookmark className="w-5 h-5" />
+                <div className="flex gap-1">
+                  {folder.allowContribution && (
+                    <button
+                      onClick={handleContribute}
+                      className="w-[120px] bg-primary text-white py-2 rounded-full font-semibold hover:bg-purple-800 transition-colors duration-200 cursor-pointer"
+                    >
+                      Contribute
+                    </button>
                   )}
-                </button>
+                  <button
+                    onClick={() => {
+                      handleBookmark(folder);
+                    }}
+                    className="p-2 text-gray-600 hover:bg-gray-100 rounded-lg transition-colors"
+                  >
+                    {isBookmarked(folder.$id) ? (
+                      <BookmarkCheck className="w-5 h-5 text-primary" />
+                    ) : (
+                      <Bookmark className="w-5 h-5" />
+                    )}
+                  </button>
+                </div>
               )}
               <button
                 onClick={handleToggle}

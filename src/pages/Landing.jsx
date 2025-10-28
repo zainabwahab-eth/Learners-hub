@@ -64,7 +64,7 @@ const Landing = () => {
       icon: "🌍",
       title: "Share with Community",
       description:
-        "Publish folders and explore curated collections from others.",
+        "Publish folders and explore curated collections from others and contribute.",
     },
     {
       icon: "⭐",
@@ -104,7 +104,7 @@ const Landing = () => {
         {/* Features Section */}
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-20">
           <h2 className="text-xl font-bold text-gray-900 text-center mb-12">
-            You can do a lot with Linkora
+            You can do a lot with LinkVault
           </h2>
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-2">

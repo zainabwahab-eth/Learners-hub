@@ -70,6 +70,11 @@ export const AuthProvider = ({ children }) => {
     const origin = window.location.origin;
     const successUrl = `${origin}/auth/callback`;
     const failureUrl = `${origin}/login`;
+
+    console.log("Current origin:", origin);
+    console.log("Success URL:", successUrl);
+    console.log("Failure URL:", failureUrl);
+
     account.createOAuth2Token("google", successUrl, failureUrl);
   };
 
@@ -152,8 +157,6 @@ export const AuthProvider = ({ children }) => {
     logout,
     saveUserProfile,
     syncProfile,
-
-    //68ff942a003df3d3735e
   };
 
   if (loading) {

@@ -13,6 +13,7 @@ const CreateFolderModal = ({
   const [folderDescription, setFolderDescription] = useState("");
   const [tags, setTags] = useState([]);
   const [tagInput, setTagInput] = useState("");
+  const [allowContribution, setAllowContribution] = useState(false);
   const [errors, setErrors] = useState({
     folderName: "",
     description: "",
@@ -62,7 +63,7 @@ const CreateFolderModal = ({
     const data = {
       folderName,
       description: folderDescription,
-      ...(type === "share" && { tags }),
+      ...(type === "share" && { tags, allowContribution }),
     };
 
     onSubmit(data, type);
@@ -70,6 +71,7 @@ const CreateFolderModal = ({
     setFolderName("");
     setFolderDescription("");
     setTags([]);
+    setAllowContribution(false);
   };
 
   const handleModalClick = (e) => {
@@ -120,10 +122,6 @@ const CreateFolderModal = ({
 
           {type === "share" && (
             <div>
-              {/* <label className="block mb-1 font-medium text-gray-700">
-                Tags (max 4)
-              </label> */}
-
               {/* Tag Input */}
               <div className="flex gap-2">
                 <input
@@ -164,6 +162,26 @@ const CreateFolderModal = ({
               {errors.tag && (
                 <p className="text-red-500 text-sm mt-1">{errors.tag}</p>
               )}
+
+              {/* Allow Contribution Checkbox */}
+              <div className="mt-4">
+                <label className="flex items-start gap-2 cursor-pointer">
+                  <input
+                    type="checkbox"
+                    checked={allowContribution}
+                    onChange={(e) => setAllowContribution(e.target.checked)}
+                    className="mt-1 w-4 h-4 text-purple-700 border-gray-300 rounded focus:ring-purple-700"
+                  />
+                  <span className="font-medium text-gray-800">
+                    Allow Contribution
+                  </span>
+                </label>
+                <p className="text-gray-500 text-xs mt-1 leading-snug">
+                  By checking this box, you allow others to contribute to this
+                  folder. These contributions will require your approval before
+                  they are added.
+                </p>
+              </div>
             </div>
           )}
 
