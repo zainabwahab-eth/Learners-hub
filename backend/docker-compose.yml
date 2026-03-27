@@ -1,7 +1,10 @@
+version: '3.8'
+
 services:
   db:
-    image: postgres
+    image: postgres:16       
     container_name: linkvault-db
+    restart: unless-stopped
     environment:
       POSTGRES_USER: zainab
       POSTGRES_PASSWORD: 12345
@@ -9,7 +12,7 @@ services:
     ports:
       - "5432:5432"
     volumes:
-      - pgdata:/var/lib/postgresql/data
+      - pgdata:/var/lib/postgresql
 
 volumes:
   pgdata:

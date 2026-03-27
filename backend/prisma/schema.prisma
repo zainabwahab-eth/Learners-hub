@@ -6,6 +6,7 @@
 generator client {
   provider = "prisma-client"
   output   = "../generated/prisma"
+  moduleFormat = "cjs"
 }
 
 datasource db {
@@ -15,7 +16,6 @@ datasource db {
 model User {
   id String @id @default(uuid())
   email String @unique
-  username String @unique
   name String
   password String
   avatar String?
@@ -33,7 +33,7 @@ model Folder {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  owner User @relation(fields: [ownerId], referemce: [id])
+  owner User @relation(fields: [ownerId], references: [id])
   ownerId String
 
   links Link[]
@@ -46,7 +46,7 @@ model Link {
   url String
   createdAt DateTime @default(now())
 
-  folder Folder @relation(fields: [folderId], referemce: [id], onDelete: Cascade)
+  folder Folder @relation(fields: [folderId], references: [id], onDelete: Cascade)
   folderId String
 
 }
