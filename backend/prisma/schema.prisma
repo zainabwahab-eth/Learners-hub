@@ -13,40 +13,70 @@ datasource db {
   provider = "postgresql"
 }
 
-model User {
-  id String @id @default(uuid())
-  email String @unique
-  name String
-  password String
-  avatar String?
+model Profile {
+  id        String   @id // Supabase auth.users.id (uuid) — set explicitly, never @default(uuid())
+  email     String   @unique
+  name      String?
+  avatar    String?
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  folders Folder[]
+  folders   Folder[]
+  links     Link[]
+  bookmarks Bookmark[]
+
+  @@map("profiles")
 }
 
 model Folder {
-  id String @id @default(uuid())
-  title String
-  description String?
-  isShared Boolean @default(false)
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  id                String    @id @default(uuid())
+  folderName        String
+  description       String?
+  isShared          Boolean   @default(false)
+  sharedAt          DateTime?
+  allowContribution Boolean   @default(false)
+  tags              String[]  @default([])
+  createdAt         DateTime  @default(now())
+  updatedAt         DateTime  @updatedAt
 
-  owner User @relation(fields: [ownerId], references: [id])
+  owner   Profile @relation(fields: [ownerId], references: [id], onDelete: Cascade)
   ownerId String
 
-  links Link[]
+  links     Link[]
+  bookmarks Bookmark[]
+
+  @@index([ownerId])
+  @@index([isShared, sharedAt])
+  @@map("folders")
 }
 
 model Link {
-  id String @id @default(uuid())
-  title String
+  id          String   @id @default(uuid())
+  title       String
   description String?
-  url String
-  createdAt DateTime @default(now())
+  url         String
+  createdAt   DateTime @default(now())
 
-  folder Folder @relation(fields: [folderId], references: [id], onDelete: Cascade)
+  folder   Folder @relation(fields: [folderId], references: [id], onDelete: Cascade)
   folderId String
 
+  owner   Profile @relation(fields: [ownerId], references: [id], onDelete: Cascade)
+  ownerId String
+
+  @@index([folderId])
+  @@map("links")
+}
+
+model Bookmark {
+  id        String   @id @default(uuid())
+  createdAt DateTime @default(now())
+
+  folder   Folder @relation(fields: [folderId], references: [id], onDelete: Cascade)
+  folderId String
+
+  owner   Profile @relation(fields: [ownerId], references: [id], onDelete: Cascade)
+  ownerId String
+
+  @@unique([ownerId, folderId])
+  @@map("bookmarks")
 }

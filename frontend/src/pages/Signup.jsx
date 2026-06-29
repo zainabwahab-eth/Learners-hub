@@ -14,7 +14,7 @@ const Signup = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState("");
   const [isLoading, setIsLoading] = useState(false);
-  const { signup, saveUserProfile, AuthWithGoogle } = useAuth();
+  const { signup, AuthWithGoogle } = useAuth();
   const { showAlert } = useAlert();
   const {
     register,
@@ -36,22 +36,12 @@ const Signup = () => {
     setError("");
     setIsLoading(true);
     try {
-      const newUser = await signup(data.email, data.password, data.name);
-
-      await saveUser(newUser);
-      navigate("/dashboard");
+      await signup(data.email, data.password, data.name);
+      navigate("/confirm-email", { state: { email: data.email } });
     } catch (err) {
       setError("Invalid credentials");
       console.error("Signup error", err.message);
       showAlert("Error Signing up. Please try again", 'error');
-    }
-  };
-
-  const saveUser = async (user) => {
-    try {
-      await saveUserProfile(user.$id, user.email, user.name);
-    } catch (err) {
-      console.error("Error saving user profile", err.message);
     }
   };
 

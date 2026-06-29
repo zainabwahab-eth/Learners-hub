@@ -1,12 +1,7 @@
-import { ID, Query } from "appwrite";
 import { useState, useEffect } from "react";
-import { tablesDB } from "../lib/appwrite";
+import { api } from "../lib/api";
 import { FolderContext } from "../context/useContext";
 import { useAuth } from "../context/useContext";
-
-const DATABASE_ID = import.meta.env.VITE_APPWRITE_DATABASE_ID;
-const FOLDER_COLLECTION_ID = "folders";
-const PROFILE_COLLECTION_ID = "profiles";
 
 export const FolderProvider = ({ children }) => {
   const { user } = useAuth();
@@ -26,20 +21,10 @@ export const FolderProvider = ({ children }) => {
     if (!user) return;
     setLoadingFolder(true);
     try {
-      const response = await tablesDB.listRows({
-        databaseId: DATABASE_ID,
-        tableId: FOLDER_COLLECTION_ID,
-        queries: [
-          Query.equal("ownerId", user.$id),
-          Query.orderDesc("$createdAt"),
-          Query.limit(10),
-          Query.offset(currentOffset),
-        ],
+      const response = await api.get("/folders", {
+        params: { offset: currentOffset, limit: 10 },
       });
-      const sorted = response.rows.sort(
-        (a, b) => new Date(b.$createdAt) - new Date(a.$createdAt)
-      );
-      const fetched = sorted || [];
+      const fetched = response.data.rows || [];
 
       if (fetched.length < 10) setHasMore(false);
 
@@ -68,36 +53,11 @@ export const FolderProvider = ({ children }) => {
   const fetchSharedFolders = async (currentOffset = 0, append = false) => {
     setLoadingShared(true);
     try {
-      const response = await tablesDB.listRows({
-        databaseId: DATABASE_ID,
-        tableId: FOLDER_COLLECTION_ID,
-        queries: [
-          Query.equal("isShared", true),
-          Query.limit(10),
-          Query.offset(currentOffset),
-          Query.orderDesc("sharedAt"),
-        ],
+      const response = await api.get("/folders/shared", {
+        params: { offset: currentOffset, limit: 10 },
       });
-      const folders = response.rows;
+      const foldersWithOwners = response.data.rows || [];
 
-      // For each folder, get the user profile by ownerId
-      const foldersWithOwners = await Promise.all(
-        folders.map(async (folder) => {
-          try {
-            const profileRes = await tablesDB.listRows({
-              databaseId: DATABASE_ID,
-              tableId: PROFILE_COLLECTION_ID,
-              queries: [Query.equal("userId", folder.ownerId)],
-            });
-
-            const owner = profileRes.rows[0];
-            return { ...folder, owner };
-          } catch (err) {
-            console.error("Error fetching profile for", folder.ownerId, err);
-            return { ...folder, owner: null };
-          }
-        })
-      );
       if (foldersWithOwners.length < 10) setHasMoreShared(false);
 
       if (append) {
@@ -124,18 +84,8 @@ export const FolderProvider = ({ children }) => {
   //Create new folder
   const createFolder = async (folderName, description) => {
     try {
-      const response = await tablesDB.createRow({
-        databaseId: DATABASE_ID,
-        tableId: FOLDER_COLLECTION_ID,
-        rowId: ID.unique(),
-        data: {
-          folderName,
-          description,
-          isShared: false,
-          ownerId: user.$id,
-        },
-      });
-      setFolders((prev) => [response, ...prev]);
+      const response = await api.post("/folders", { folderName, description });
+      setFolders((prev) => [response.data, ...prev]);
     } catch (err) {
       console.error("Error creating folders:", err);
       throw new Error("Error creating folders.");
@@ -145,19 +95,12 @@ export const FolderProvider = ({ children }) => {
   // Update folder (e.g., share or rename)
   const updateFolder = async (folderId, updates) => {
     try {
-      const response = await tablesDB.updateRow({
-        databaseId: DATABASE_ID,
-        tableId: FOLDER_COLLECTION_ID,
-        rowId: folderId,
-        data: {
-          ...updates,
-        },
-      });
+      const response = await api.patch(`/folders/${folderId}`, updates);
 
       setFolders((prev) =>
-        prev.map((folder) => (folder.$id === folderId ? response : folder))
+        prev.map((folder) => (folder.id === folderId ? response.data : folder))
       );
-      return response;
+      return response.data;
     } catch (err) {
       console.error("Error updating folder:", err);
       throw new Error("Error updating folder.");
@@ -167,12 +110,8 @@ export const FolderProvider = ({ children }) => {
   //Delete folder
   const deleteFolder = async (folderId) => {
     try {
-      await tablesDB.deleteRow({
-        databaseId: DATABASE_ID,
-        tableId: FOLDER_COLLECTION_ID,
-        rowId: folderId,
-      });
-      setFolders((prev) => prev.filter((f) => f.$id !== folderId));
+      await api.delete(`/folders/${folderId}`);
+      setFolders((prev) => prev.filter((f) => f.id !== folderId));
     } catch (err) {
       console.error("Error deleting folder:", err);
       throw new Error("Error deleting folder.");

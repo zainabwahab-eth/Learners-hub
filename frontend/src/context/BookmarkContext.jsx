@@ -1,13 +1,7 @@
-import { ID, Query } from "appwrite";
 import { useState, useEffect } from "react";
-import { tablesDB } from "../lib/appwrite";
+import { api } from "../lib/api";
 import { BookmarkContext } from "../context/useContext";
 import { useAuth } from "../context/useContext";
-
-const DATABASE_ID = import.meta.env.VITE_APPWRITE_DATABASE_ID;
-const BOOKMARK_COLLECTION_ID = "bookmarks";
-const FOLDER_COLLECTION_ID = "folders";
-const PROFILE_COLLECTION_ID = "profiles";
 
 export const BookmarkProvider = ({ children }) => {
   const { user } = useAuth();
@@ -22,18 +16,10 @@ export const BookmarkProvider = ({ children }) => {
     if (!user) return;
     setLoadingBookmark(true);
     try {
-      const response = await tablesDB.listRows({
-        databaseId: DATABASE_ID,
-        tableId: BOOKMARK_COLLECTION_ID,
-        queries: [
-          Query.equal("ownerId", user.$id),
-          Query.equal("isBookmarked", true),
-          Query.orderDesc("$createdAt"),
-          Query.limit(10),
-          Query.offset(currentOffset),
-        ],
+      const response = await api.get("/bookmarks", {
+        params: { offset: currentOffset, limit: 10 },
       });
-      const bookmarks = response.rows || [];
+      const bookmarks = response.data.rows || [];
 
       if (bookmarks.length < 10) setHasMore(false);
 
@@ -43,8 +29,17 @@ export const BookmarkProvider = ({ children }) => {
         setBookMarkedFolders(bookmarks);
       }
 
-      // Fetch full folder data for bookmarked folders
-      await fetchBookmarkedFoldersData(bookmarks, append);
+      const enriched = bookmarks.map((bookmark) => ({
+        ...bookmark.folder,
+        owner: bookmark.folder.owner,
+        bookmarkId: bookmark.id,
+      }));
+
+      if (append) {
+        setBookmarkedFoldersData((prev) => [...prev, ...enriched]);
+      } else {
+        setBookmarkedFoldersData(enriched);
+      }
     } catch (err) {
       console.error("Error fetching bookmarks:", err.message);
     } finally {
@@ -63,94 +58,22 @@ export const BookmarkProvider = ({ children }) => {
     }
   };
 
-  // Fetch complete folder data for bookmarked folders
-  const fetchBookmarkedFoldersData = async (bookmarks, append = false) => {
-    if (!bookmarks || bookmarks.length === 0) {
-      setBookmarkedFoldersData([]);
-      return;
-    }
-
-    try {
-      // Fetch folder details for each bookmark
-      const folderPromises = bookmarks.map(async (bookmark) => {
-        try {
-          // Use getRow to fetch single folder by ID
-          const folderRes = await tablesDB.getRow({
-            databaseId: DATABASE_ID,
-            tableId: FOLDER_COLLECTION_ID,
-            rowId: bookmark.folderId,
-          });
-
-          // Check if folder is shared
-          if (!folderRes.isShared) {
-            console.warn("Folder is not shared:", folderRes.$id);
-            return null;
-          }
-
-          // Fetch folder owner profile
-          let ownerProfile = null;
-          try {
-            const profileRes = await tablesDB.listRows({
-              databaseId: DATABASE_ID,
-              tableId: PROFILE_COLLECTION_ID,
-              queries: [Query.equal("userId", folderRes.ownerId)],
-            });
-            ownerProfile = profileRes.rows[0] || null;
-          } catch (err) {
-            console.warn("No profile found for owner:", folderRes.ownerId, err);
-          }
-
-          // Combine everything neatly
-          return {
-            ...folderRes,
-            owner: ownerProfile,
-            bookmarkId: bookmark.$id,
-          };
-        } catch (err) {
-          console.error("Error fetching folder:", bookmark.folderId, err);
-          return null;
-        }
-      });
-
-      // Wait for all folders to resolve
-      const enrichedFolders = await Promise.all(folderPromises);
-      const validFolders = enrichedFolders.filter((f) => f !== null);
-
-      if (append) {
-        setBookmarkedFoldersData((prev) => [...prev, ...validFolders]);
-      } else {
-        setBookmarkedFoldersData(validFolders);
-      }
-    } catch (err) {
-      console.error("Error fetching bookmarked folders data:", err);
-    }
-  };
-
   const isBookmarked = (folderId) => {
     return bookmarkedFolders.some((bookmark) => bookmark.folderId === folderId);
   };
 
   const getBookmarkId = (folderId) => {
     const bookmark = bookmarkedFolders.find((b) => b.folderId === folderId);
-    return bookmark?.$id;
+    return bookmark?.id;
   };
 
-  //Create new folder
+  //Create new bookmark
   const addBookmark = async (folderId) => {
     try {
-      const response = await tablesDB.createRow({
-        databaseId: DATABASE_ID,
-        tableId: BOOKMARK_COLLECTION_ID,
-        rowId: ID.unique(),
-        data: {
-          folderId,
-          ownerId: user.$id,
-          isBookmarked: true,
-        },
-      });
-      setBookMarkedFolders((prev) => [...prev, response]);
+      const response = await api.post("/bookmarks", { folderId });
+      setBookMarkedFolders((prev) => [...prev, response.data]);
       await fetchBookmarks(0, false);
-      return response;
+      return response.data;
     } catch (err) {
       console.error("Error adding bookmark:", err);
       throw new Error("Failed to add bookmark.");
@@ -159,22 +82,10 @@ export const BookmarkProvider = ({ children }) => {
 
   //Remove Bookmark
   const removeBookmark = async (folderId) => {
-    const bookmarkId = getBookmarkId(folderId);
-
-    if (!bookmarkId) {
-      console.log("Bookmark not found");
-      return;
-    }
-
     try {
-      await tablesDB.deleteRow({
-        databaseId: DATABASE_ID,
-        tableId: BOOKMARK_COLLECTION_ID,
-        rowId: bookmarkId,
-      });
-
+      await api.delete(`/bookmarks/${folderId}`);
       setBookMarkedFolders((prev) =>
-        prev.filter((bookmark) => bookmark.$id !== bookmarkId)
+        prev.filter((bookmark) => bookmark.folderId !== folderId)
       );
       await fetchBookmarks(0, false);
     } catch (error) {

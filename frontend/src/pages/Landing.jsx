@@ -31,7 +31,7 @@ const Landing = () => {
 
   useEffect(() => {
     if (sharedFolders.length > 0) {
-      fetchLinkCounts(sharedFolders.map((f) => f.$id));
+      fetchLinkCounts(sharedFolders.map((f) => f.id));
     }
   }, [sharedFolders, fetchLinkCounts]);
 
@@ -139,12 +139,12 @@ const Landing = () => {
               <div className="space-y-6">
                 {sharedFolders.map((folder) => (
                   <FolderCard
-                    key={folder.$id}
+                    key={folder.id}
                     use="community"
                     folder={folder}
-                    links={folderLinks[folder.$id] || []}
-                    isLoading={loadingLinks[folder.$id]}
-                    onToggleExpand={() => handleToggleExpand(folder.$id)}
+                    links={folderLinks[folder.id] || []}
+                    isLoading={loadingLinks[folder.id]}
+                    onToggleExpand={() => handleToggleExpand(folder.id)}
                   />
                 ))}
               </div>

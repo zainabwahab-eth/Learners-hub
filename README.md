@@ -3,7 +3,7 @@
 **LinkVault** is a platform designed to help developers (and lifelong learners in general) **organize, manage, and share their learning resources** in one simple, structured space.  
 Users can create topic-based folders and fill them with helpful links to blogs, tutorials, courses, or videos.
 
-Built with **React (Vite)** and **Appwrite Cloud**, LinkVault provides a seamless and collaborative learning experience.
+Built with **React (Vite)** on the frontend and **NestJS + Supabase** on the backend, LinkVault provides a seamless and collaborative learning experience.
 
 ---
 
@@ -24,20 +24,29 @@ Built with **React (Vite)** and **Appwrite Cloud**, LinkVault provides a seamles
 
 ## 🧠 Tech Stack
 
-**Frontend:**
+**Frontend** (`frontend/`):
 
 - [Vite](https://vitejs.dev/)
 - [React](https://react.dev/)
 - [React Router](https://reactrouter.com/)
+- [Supabase JS](https://supabase.com/docs/reference/javascript) for authentication
+- [Axios](https://axios-http.com/) for talking to the backend API
 
-**Backend:**
+**Backend** (`backend/`):
 
-- [Appwrite Cloud](https://appwrite.io/cloud) for Authentication, Database, and Storage
+- [NestJS](https://nestjs.com/)
+- [Prisma](https://www.prisma.io/) ORM
+- [Supabase](https://supabase.com/) for the hosted Postgres database, and Auth (the backend verifies Supabase-issued JWTs)
 
-**Other Tools:**
+---
 
-- Appwrite OAuth (Google)
-- Appwrite SDK
+## 📂 Project Structure
+
+```
+Learners-hub/
+├── frontend/   # React (Vite) client — talks to Supabase Auth directly, and to the backend API for data
+└── backend/    # NestJS API — owns folders/links/bookmarks, backed by Prisma + Supabase Postgres
+```
 
 ---
 
@@ -47,52 +56,72 @@ Built with **React (Vite)** and **Appwrite Cloud**, LinkVault provides a seamles
 
 ```bash
 git clone https://github.com/zainabwahab-eth/Learners-hub
-cd learners-hub
+cd Learners-hub
 ```
 
-### 2. Install Dependencies
+### 2. Set Up a Supabase Project
+
+1. Create a free project at [supabase.com](https://supabase.com).
+2. **(Optional, for Google sign-in)** Go to **Authentication → Providers → Google**, enable it, and add your Google OAuth Client ID/Secret. Add the redirect URI Supabase gives you to your Google Cloud OAuth credentials.
+3. Under **Authentication → URL Configuration**, set the Site URL to `http://localhost:5173` and add `http://localhost:5173/auth/callback` to the redirect allow-list.
+4. From **Settings → API**, copy the **Project URL**, **anon public key**, and **service_role key**.
+5. From **Settings → Database → Connection string**, copy the **Direct connection** URI (use this one, not the transaction pooler, so Prisma migrations work correctly).
+
+### 3. Backend Setup
 
 ```bash
+cd backend
 npm install
 ```
 
-### 3. Configure Environment Variables
-
-Create a `.env` file in the root folder and add your Appwrite configuration:
+Fill in `backend/.env`:
 
 ```bash
-VITE_APPWRITE_PROJECT_ID=your_appwrite_project_id
-VITE_APPWRITE_ENDPOINT=https://cloud.appwrite.io/v1
-VITE_APPWRITE_DATABASE_ID=your_database_id
+DATABASE_URL=postgresql://postgres:<password>@db.<project-ref>.supabase.co:5432/postgres
+SUPABASE_URL=https://<project-ref>.supabase.co
+SUPABASE_SERVICE_ROLE_KEY=<service-role-key>
+PORT=3000
+FRONTEND_URL=http://localhost:5173
 ```
 
-> You can find these values in your Appwrite Cloud console.
+Apply the database schema, then start the server:
 
-### 4. Run the Development Server
+```bash
+npx prisma migrate dev
+npm run start:dev
+```
+
+The API will be running on 👉 `http://localhost:3000`
+
+### 4. Frontend Setup
+
+```bash
+cd frontend
+npm install
+```
+
+Fill in `frontend/.env`:
+
+```bash
+VITE_SUPABASE_URL=https://<project-ref>.supabase.co
+VITE_SUPABASE_ANON_KEY=<anon-key>
+VITE_API_URL=http://localhost:3000
+```
+
+Then run the dev server:
 
 ```bash
 npm run dev
 ```
 
-Your app should now be running on  
-👉 `http://localhost:5173`
+Your app should now be running on 👉 `http://localhost:5173`
 
 ---
 
 ## ☁️ Deployment
 
-LinkVault is deployed on **Appwrite Hosting** with **Appwrite Cloud backend**.
+LinkVault's database and authentication are hosted on **Supabase**. The frontend can be deployed to any static host (e.g. Vercel, Netlify), and the backend to any Node host (e.g. Railway, Render, Fly.io) — just make sure to set the same environment variables described above on each, pointing `FRONTEND_URL` / `VITE_API_URL` at your deployed URLs.
 
----
-
-## 🧩 Upcoming Features
-
-- 📬 Email notifications for contribution requests
-- 💡 Folder insights and analytics
-- 🧑‍💻 Profile pages showing users’ shared folders
-- 🌈 Dark mode
-
----
 
 ## 🤝 Open Source Vision
 
@@ -105,11 +134,25 @@ Contributions, feedback, and ideas are always welcome!
 
 ## 🛠️ Run Scripts
 
+**Frontend** (`frontend/`):
+
 | Command           | Description                  |
-| ----------------- | ---------------------------- |
+| ----------------- | ----------------------------- |
 | `npm run dev`     | Run in development mode      |
 | `npm run build`   | Build for production         |
 | `npm run preview` | Preview the production build |
+| `npm run lint`    | Lint the source code         |
+
+**Backend** (`backend/`):
+
+| Command              | Description                          |
+| --------------------- | ------------------------------------- |
+| `npm run start:dev`    | Run in development mode (watch)      |
+| `npm run build`        | Compile to `dist/`                   |
+| `npm run start:prod`   | Run the compiled production build    |
+| `npm run lint`         | Lint the source code                 |
+| `npm run test`         | Run unit tests                       |
+| `npm run test:e2e`     | Run end-to-end tests                 |
 
 ---
 

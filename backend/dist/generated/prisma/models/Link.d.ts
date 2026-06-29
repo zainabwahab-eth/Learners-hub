@@ -13,6 +13,7 @@ export type LinkMinAggregateOutputType = {
     url: string | null;
     createdAt: Date | null;
     folderId: string | null;
+    ownerId: string | null;
 };
 export type LinkMaxAggregateOutputType = {
     id: string | null;
@@ -21,6 +22,7 @@ export type LinkMaxAggregateOutputType = {
     url: string | null;
     createdAt: Date | null;
     folderId: string | null;
+    ownerId: string | null;
 };
 export type LinkCountAggregateOutputType = {
     id: number;
@@ -29,6 +31,7 @@ export type LinkCountAggregateOutputType = {
     url: number;
     createdAt: number;
     folderId: number;
+    ownerId: number;
     _all: number;
 };
 export type LinkMinAggregateInputType = {
@@ -38,6 +41,7 @@ export type LinkMinAggregateInputType = {
     url?: true;
     createdAt?: true;
     folderId?: true;
+    ownerId?: true;
 };
 export type LinkMaxAggregateInputType = {
     id?: true;
@@ -46,6 +50,7 @@ export type LinkMaxAggregateInputType = {
     url?: true;
     createdAt?: true;
     folderId?: true;
+    ownerId?: true;
 };
 export type LinkCountAggregateInputType = {
     id?: true;
@@ -54,6 +59,7 @@ export type LinkCountAggregateInputType = {
     url?: true;
     createdAt?: true;
     folderId?: true;
+    ownerId?: true;
     _all?: true;
 };
 export type LinkAggregateArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -87,6 +93,7 @@ export type LinkGroupByOutputType = {
     url: string;
     createdAt: Date;
     folderId: string;
+    ownerId: string;
     _count: LinkCountAggregateOutputType | null;
     _min: LinkMinAggregateOutputType | null;
     _max: LinkMaxAggregateOutputType | null;
@@ -104,7 +111,9 @@ export type LinkWhereInput = {
     url?: Prisma.StringFilter<"Link"> | string;
     createdAt?: Prisma.DateTimeFilter<"Link"> | Date | string;
     folderId?: Prisma.StringFilter<"Link"> | string;
+    ownerId?: Prisma.StringFilter<"Link"> | string;
     folder?: Prisma.XOR<Prisma.FolderScalarRelationFilter, Prisma.FolderWhereInput>;
+    owner?: Prisma.XOR<Prisma.ProfileScalarRelationFilter, Prisma.ProfileWhereInput>;
 };
 export type LinkOrderByWithRelationInput = {
     id?: Prisma.SortOrder;
@@ -113,7 +122,9 @@ export type LinkOrderByWithRelationInput = {
     url?: Prisma.SortOrder;
     createdAt?: Prisma.SortOrder;
     folderId?: Prisma.SortOrder;
+    ownerId?: Prisma.SortOrder;
     folder?: Prisma.FolderOrderByWithRelationInput;
+    owner?: Prisma.ProfileOrderByWithRelationInput;
 };
 export type LinkWhereUniqueInput = Prisma.AtLeast<{
     id?: string;
@@ -125,7 +136,9 @@ export type LinkWhereUniqueInput = Prisma.AtLeast<{
     url?: Prisma.StringFilter<"Link"> | string;
     createdAt?: Prisma.DateTimeFilter<"Link"> | Date | string;
     folderId?: Prisma.StringFilter<"Link"> | string;
+    ownerId?: Prisma.StringFilter<"Link"> | string;
     folder?: Prisma.XOR<Prisma.FolderScalarRelationFilter, Prisma.FolderWhereInput>;
+    owner?: Prisma.XOR<Prisma.ProfileScalarRelationFilter, Prisma.ProfileWhereInput>;
 }, "id">;
 export type LinkOrderByWithAggregationInput = {
     id?: Prisma.SortOrder;
@@ -134,6 +147,7 @@ export type LinkOrderByWithAggregationInput = {
     url?: Prisma.SortOrder;
     createdAt?: Prisma.SortOrder;
     folderId?: Prisma.SortOrder;
+    ownerId?: Prisma.SortOrder;
     _count?: Prisma.LinkCountOrderByAggregateInput;
     _max?: Prisma.LinkMaxOrderByAggregateInput;
     _min?: Prisma.LinkMinOrderByAggregateInput;
@@ -148,6 +162,7 @@ export type LinkScalarWhereWithAggregatesInput = {
     url?: Prisma.StringWithAggregatesFilter<"Link"> | string;
     createdAt?: Prisma.DateTimeWithAggregatesFilter<"Link"> | Date | string;
     folderId?: Prisma.StringWithAggregatesFilter<"Link"> | string;
+    ownerId?: Prisma.StringWithAggregatesFilter<"Link"> | string;
 };
 export type LinkCreateInput = {
     id?: string;
@@ -156,6 +171,7 @@ export type LinkCreateInput = {
     url: string;
     createdAt?: Date | string;
     folder: Prisma.FolderCreateNestedOneWithoutLinksInput;
+    owner: Prisma.ProfileCreateNestedOneWithoutLinksInput;
 };
 export type LinkUncheckedCreateInput = {
     id?: string;
@@ -164,6 +180,7 @@ export type LinkUncheckedCreateInput = {
     url: string;
     createdAt?: Date | string;
     folderId: string;
+    ownerId: string;
 };
 export type LinkUpdateInput = {
     id?: Prisma.StringFieldUpdateOperationsInput | string;
@@ -172,6 +189,7 @@ export type LinkUpdateInput = {
     url?: Prisma.StringFieldUpdateOperationsInput | string;
     createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
     folder?: Prisma.FolderUpdateOneRequiredWithoutLinksNestedInput;
+    owner?: Prisma.ProfileUpdateOneRequiredWithoutLinksNestedInput;
 };
 export type LinkUncheckedUpdateInput = {
     id?: Prisma.StringFieldUpdateOperationsInput | string;
@@ -180,6 +198,7 @@ export type LinkUncheckedUpdateInput = {
     url?: Prisma.StringFieldUpdateOperationsInput | string;
     createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
     folderId?: Prisma.StringFieldUpdateOperationsInput | string;
+    ownerId?: Prisma.StringFieldUpdateOperationsInput | string;
 };
 export type LinkCreateManyInput = {
     id?: string;
@@ -188,6 +207,7 @@ export type LinkCreateManyInput = {
     url: string;
     createdAt?: Date | string;
     folderId: string;
+    ownerId: string;
 };
 export type LinkUpdateManyMutationInput = {
     id?: Prisma.StringFieldUpdateOperationsInput | string;
@@ -203,6 +223,7 @@ export type LinkUncheckedUpdateManyInput = {
     url?: Prisma.StringFieldUpdateOperationsInput | string;
     createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
     folderId?: Prisma.StringFieldUpdateOperationsInput | string;
+    ownerId?: Prisma.StringFieldUpdateOperationsInput | string;
 };
 export type LinkListRelationFilter = {
     every?: Prisma.LinkWhereInput;
@@ -219,6 +240,7 @@ export type LinkCountOrderByAggregateInput = {
     url?: Prisma.SortOrder;
     createdAt?: Prisma.SortOrder;
     folderId?: Prisma.SortOrder;
+    ownerId?: Prisma.SortOrder;
 };
 export type LinkMaxOrderByAggregateInput = {
     id?: Prisma.SortOrder;
@@ -227,6 +249,7 @@ export type LinkMaxOrderByAggregateInput = {
     url?: Prisma.SortOrder;
     createdAt?: Prisma.SortOrder;
     folderId?: Prisma.SortOrder;
+    ownerId?: Prisma.SortOrder;
 };
 export type LinkMinOrderByAggregateInput = {
     id?: Prisma.SortOrder;
@@ -235,6 +258,45 @@ export type LinkMinOrderByAggregateInput = {
     url?: Prisma.SortOrder;
     createdAt?: Prisma.SortOrder;
     folderId?: Prisma.SortOrder;
+    ownerId?: Prisma.SortOrder;
+};
+export type LinkCreateNestedManyWithoutOwnerInput = {
+    create?: Prisma.XOR<Prisma.LinkCreateWithoutOwnerInput, Prisma.LinkUncheckedCreateWithoutOwnerInput> | Prisma.LinkCreateWithoutOwnerInput[] | Prisma.LinkUncheckedCreateWithoutOwnerInput[];
+    connectOrCreate?: Prisma.LinkCreateOrConnectWithoutOwnerInput | Prisma.LinkCreateOrConnectWithoutOwnerInput[];
+    createMany?: Prisma.LinkCreateManyOwnerInputEnvelope;
+    connect?: Prisma.LinkWhereUniqueInput | Prisma.LinkWhereUniqueInput[];
+};
+export type LinkUncheckedCreateNestedManyWithoutOwnerInput = {
+    create?: Prisma.XOR<Prisma.LinkCreateWithoutOwnerInput, Prisma.LinkUncheckedCreateWithoutOwnerInput> | Prisma.LinkCreateWithoutOwnerInput[] | Prisma.LinkUncheckedCreateWithoutOwnerInput[];
+    connectOrCreate?: Prisma.LinkCreateOrConnectWithoutOwnerInput | Prisma.LinkCreateOrConnectWithoutOwnerInput[];
+    createMany?: Prisma.LinkCreateManyOwnerInputEnvelope;
+    connect?: Prisma.LinkWhereUniqueInput | Prisma.LinkWhereUniqueInput[];
+};
+export type LinkUpdateManyWithoutOwnerNestedInput = {
+    create?: Prisma.XOR<Prisma.LinkCreateWithoutOwnerInput, Prisma.LinkUncheckedCreateWithoutOwnerInput> | Prisma.LinkCreateWithoutOwnerInput[] | Prisma.LinkUncheckedCreateWithoutOwnerInput[];
+    connectOrCreate?: Prisma.LinkCreateOrConnectWithoutOwnerInput | Prisma.LinkCreateOrConnectWithoutOwnerInput[];
+    upsert?: Prisma.LinkUpsertWithWhereUniqueWithoutOwnerInput | Prisma.LinkUpsertWithWhereUniqueWithoutOwnerInput[];
+    createMany?: Prisma.LinkCreateManyOwnerInputEnvelope;
+    set?: Prisma.LinkWhereUniqueInput | Prisma.LinkWhereUniqueInput[];
+    disconnect?: Prisma.LinkWhereUniqueInput | Prisma.LinkWhereUniqueInput[];
+    delete?: Prisma.LinkWhereUniqueInput | Prisma.LinkWhereUniqueInput[];
+    connect?: Prisma.LinkWhereUniqueInput | Prisma.LinkWhereUniqueInput[];
+    update?: Prisma.LinkUpdateWithWhereUniqueWithoutOwnerInput | Prisma.LinkUpdateWithWhereUniqueWithoutOwnerInput[];
+    updateMany?: Prisma.LinkUpdateManyWithWhereWithoutOwnerInput | Prisma.LinkUpdateManyWithWhereWithoutOwnerInput[];
+    deleteMany?: Prisma.LinkScalarWhereInput | Prisma.LinkScalarWhereInput[];
+};
+export type LinkUncheckedUpdateManyWithoutOwnerNestedInput = {
+    create?: Prisma.XOR<Prisma.LinkCreateWithoutOwnerInput, Prisma.LinkUncheckedCreateWithoutOwnerInput> | Prisma.LinkCreateWithoutOwnerInput[] | Prisma.LinkUncheckedCreateWithoutOwnerInput[];
+    connectOrCreate?: Prisma.LinkCreateOrConnectWithoutOwnerInput | Prisma.LinkCreateOrConnectWithoutOwnerInput[];
+    upsert?: Prisma.LinkUpsertWithWhereUniqueWithoutOwnerInput | Prisma.LinkUpsertWithWhereUniqueWithoutOwnerInput[];
+    createMany?: Prisma.LinkCreateManyOwnerInputEnvelope;
+    set?: Prisma.LinkWhereUniqueInput | Prisma.LinkWhereUniqueInput[];
+    disconnect?: Prisma.LinkWhereUniqueInput | Prisma.LinkWhereUniqueInput[];
+    delete?: Prisma.LinkWhereUniqueInput | Prisma.LinkWhereUniqueInput[];
+    connect?: Prisma.LinkWhereUniqueInput | Prisma.LinkWhereUniqueInput[];
+    update?: Prisma.LinkUpdateWithWhereUniqueWithoutOwnerInput | Prisma.LinkUpdateWithWhereUniqueWithoutOwnerInput[];
+    updateMany?: Prisma.LinkUpdateManyWithWhereWithoutOwnerInput | Prisma.LinkUpdateManyWithWhereWithoutOwnerInput[];
+    deleteMany?: Prisma.LinkScalarWhereInput | Prisma.LinkScalarWhereInput[];
 };
 export type LinkCreateNestedManyWithoutFolderInput = {
     create?: Prisma.XOR<Prisma.LinkCreateWithoutFolderInput, Prisma.LinkUncheckedCreateWithoutFolderInput> | Prisma.LinkCreateWithoutFolderInput[] | Prisma.LinkUncheckedCreateWithoutFolderInput[];
@@ -274,12 +336,62 @@ export type LinkUncheckedUpdateManyWithoutFolderNestedInput = {
     updateMany?: Prisma.LinkUpdateManyWithWhereWithoutFolderInput | Prisma.LinkUpdateManyWithWhereWithoutFolderInput[];
     deleteMany?: Prisma.LinkScalarWhereInput | Prisma.LinkScalarWhereInput[];
 };
+export type LinkCreateWithoutOwnerInput = {
+    id?: string;
+    title: string;
+    description?: string | null;
+    url: string;
+    createdAt?: Date | string;
+    folder: Prisma.FolderCreateNestedOneWithoutLinksInput;
+};
+export type LinkUncheckedCreateWithoutOwnerInput = {
+    id?: string;
+    title: string;
+    description?: string | null;
+    url: string;
+    createdAt?: Date | string;
+    folderId: string;
+};
+export type LinkCreateOrConnectWithoutOwnerInput = {
+    where: Prisma.LinkWhereUniqueInput;
+    create: Prisma.XOR<Prisma.LinkCreateWithoutOwnerInput, Prisma.LinkUncheckedCreateWithoutOwnerInput>;
+};
+export type LinkCreateManyOwnerInputEnvelope = {
+    data: Prisma.LinkCreateManyOwnerInput | Prisma.LinkCreateManyOwnerInput[];
+    skipDuplicates?: boolean;
+};
+export type LinkUpsertWithWhereUniqueWithoutOwnerInput = {
+    where: Prisma.LinkWhereUniqueInput;
+    update: Prisma.XOR<Prisma.LinkUpdateWithoutOwnerInput, Prisma.LinkUncheckedUpdateWithoutOwnerInput>;
+    create: Prisma.XOR<Prisma.LinkCreateWithoutOwnerInput, Prisma.LinkUncheckedCreateWithoutOwnerInput>;
+};
+export type LinkUpdateWithWhereUniqueWithoutOwnerInput = {
+    where: Prisma.LinkWhereUniqueInput;
+    data: Prisma.XOR<Prisma.LinkUpdateWithoutOwnerInput, Prisma.LinkUncheckedUpdateWithoutOwnerInput>;
+};
+export type LinkUpdateManyWithWhereWithoutOwnerInput = {
+    where: Prisma.LinkScalarWhereInput;
+    data: Prisma.XOR<Prisma.LinkUpdateManyMutationInput, Prisma.LinkUncheckedUpdateManyWithoutOwnerInput>;
+};
+export type LinkScalarWhereInput = {
+    AND?: Prisma.LinkScalarWhereInput | Prisma.LinkScalarWhereInput[];
+    OR?: Prisma.LinkScalarWhereInput[];
+    NOT?: Prisma.LinkScalarWhereInput | Prisma.LinkScalarWhereInput[];
+    id?: Prisma.StringFilter<"Link"> | string;
+    title?: Prisma.StringFilter<"Link"> | string;
+    description?: Prisma.StringNullableFilter<"Link"> | string | null;
+    url?: Prisma.StringFilter<"Link"> | string;
+    createdAt?: Prisma.DateTimeFilter<"Link"> | Date | string;
+    folderId?: Prisma.StringFilter<"Link"> | string;
+    ownerId?: Prisma.StringFilter<"Link"> | string;
+};
 export type LinkCreateWithoutFolderInput = {
     id?: string;
     title: string;
     description?: string | null;
     url: string;
     createdAt?: Date | string;
+    owner: Prisma.ProfileCreateNestedOneWithoutLinksInput;
 };
 export type LinkUncheckedCreateWithoutFolderInput = {
     id?: string;
@@ -287,6 +399,7 @@ export type LinkUncheckedCreateWithoutFolderInput = {
     description?: string | null;
     url: string;
     createdAt?: Date | string;
+    ownerId: string;
 };
 export type LinkCreateOrConnectWithoutFolderInput = {
     where: Prisma.LinkWhereUniqueInput;
@@ -309,16 +422,37 @@ export type LinkUpdateManyWithWhereWithoutFolderInput = {
     where: Prisma.LinkScalarWhereInput;
     data: Prisma.XOR<Prisma.LinkUpdateManyMutationInput, Prisma.LinkUncheckedUpdateManyWithoutFolderInput>;
 };
-export type LinkScalarWhereInput = {
-    AND?: Prisma.LinkScalarWhereInput | Prisma.LinkScalarWhereInput[];
-    OR?: Prisma.LinkScalarWhereInput[];
-    NOT?: Prisma.LinkScalarWhereInput | Prisma.LinkScalarWhereInput[];
-    id?: Prisma.StringFilter<"Link"> | string;
-    title?: Prisma.StringFilter<"Link"> | string;
-    description?: Prisma.StringNullableFilter<"Link"> | string | null;
-    url?: Prisma.StringFilter<"Link"> | string;
-    createdAt?: Prisma.DateTimeFilter<"Link"> | Date | string;
-    folderId?: Prisma.StringFilter<"Link"> | string;
+export type LinkCreateManyOwnerInput = {
+    id?: string;
+    title: string;
+    description?: string | null;
+    url: string;
+    createdAt?: Date | string;
+    folderId: string;
+};
+export type LinkUpdateWithoutOwnerInput = {
+    id?: Prisma.StringFieldUpdateOperationsInput | string;
+    title?: Prisma.StringFieldUpdateOperationsInput | string;
+    description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
+    url?: Prisma.StringFieldUpdateOperationsInput | string;
+    createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
+    folder?: Prisma.FolderUpdateOneRequiredWithoutLinksNestedInput;
+};
+export type LinkUncheckedUpdateWithoutOwnerInput = {
+    id?: Prisma.StringFieldUpdateOperationsInput | string;
+    title?: Prisma.StringFieldUpdateOperationsInput | string;
+    description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
+    url?: Prisma.StringFieldUpdateOperationsInput | string;
+    createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
+    folderId?: Prisma.StringFieldUpdateOperationsInput | string;
+};
+export type LinkUncheckedUpdateManyWithoutOwnerInput = {
+    id?: Prisma.StringFieldUpdateOperationsInput | string;
+    title?: Prisma.StringFieldUpdateOperationsInput | string;
+    description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
+    url?: Prisma.StringFieldUpdateOperationsInput | string;
+    createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
+    folderId?: Prisma.StringFieldUpdateOperationsInput | string;
 };
 export type LinkCreateManyFolderInput = {
     id?: string;
@@ -326,6 +460,7 @@ export type LinkCreateManyFolderInput = {
     description?: string | null;
     url: string;
     createdAt?: Date | string;
+    ownerId: string;
 };
 export type LinkUpdateWithoutFolderInput = {
     id?: Prisma.StringFieldUpdateOperationsInput | string;
@@ -333,6 +468,7 @@ export type LinkUpdateWithoutFolderInput = {
     description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     url?: Prisma.StringFieldUpdateOperationsInput | string;
     createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
+    owner?: Prisma.ProfileUpdateOneRequiredWithoutLinksNestedInput;
 };
 export type LinkUncheckedUpdateWithoutFolderInput = {
     id?: Prisma.StringFieldUpdateOperationsInput | string;
@@ -340,6 +476,7 @@ export type LinkUncheckedUpdateWithoutFolderInput = {
     description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     url?: Prisma.StringFieldUpdateOperationsInput | string;
     createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
+    ownerId?: Prisma.StringFieldUpdateOperationsInput | string;
 };
 export type LinkUncheckedUpdateManyWithoutFolderInput = {
     id?: Prisma.StringFieldUpdateOperationsInput | string;
@@ -347,6 +484,7 @@ export type LinkUncheckedUpdateManyWithoutFolderInput = {
     description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     url?: Prisma.StringFieldUpdateOperationsInput | string;
     createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
+    ownerId?: Prisma.StringFieldUpdateOperationsInput | string;
 };
 export type LinkSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
     id?: boolean;
@@ -355,7 +493,9 @@ export type LinkSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = r
     url?: boolean;
     createdAt?: boolean;
     folderId?: boolean;
+    ownerId?: boolean;
     folder?: boolean | Prisma.FolderDefaultArgs<ExtArgs>;
+    owner?: boolean | Prisma.ProfileDefaultArgs<ExtArgs>;
 }, ExtArgs["result"]["link"]>;
 export type LinkSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
     id?: boolean;
@@ -364,7 +504,9 @@ export type LinkSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensio
     url?: boolean;
     createdAt?: boolean;
     folderId?: boolean;
+    ownerId?: boolean;
     folder?: boolean | Prisma.FolderDefaultArgs<ExtArgs>;
+    owner?: boolean | Prisma.ProfileDefaultArgs<ExtArgs>;
 }, ExtArgs["result"]["link"]>;
 export type LinkSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
     id?: boolean;
@@ -373,7 +515,9 @@ export type LinkSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensio
     url?: boolean;
     createdAt?: boolean;
     folderId?: boolean;
+    ownerId?: boolean;
     folder?: boolean | Prisma.FolderDefaultArgs<ExtArgs>;
+    owner?: boolean | Prisma.ProfileDefaultArgs<ExtArgs>;
 }, ExtArgs["result"]["link"]>;
 export type LinkSelectScalar = {
     id?: boolean;
@@ -382,21 +526,26 @@ export type LinkSelectScalar = {
     url?: boolean;
     createdAt?: boolean;
     folderId?: boolean;
+    ownerId?: boolean;
 };
-export type LinkOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "title" | "description" | "url" | "createdAt" | "folderId", ExtArgs["result"]["link"]>;
+export type LinkOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "title" | "description" | "url" | "createdAt" | "folderId" | "ownerId", ExtArgs["result"]["link"]>;
 export type LinkInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
     folder?: boolean | Prisma.FolderDefaultArgs<ExtArgs>;
+    owner?: boolean | Prisma.ProfileDefaultArgs<ExtArgs>;
 };
 export type LinkIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
     folder?: boolean | Prisma.FolderDefaultArgs<ExtArgs>;
+    owner?: boolean | Prisma.ProfileDefaultArgs<ExtArgs>;
 };
 export type LinkIncludeUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
     folder?: boolean | Prisma.FolderDefaultArgs<ExtArgs>;
+    owner?: boolean | Prisma.ProfileDefaultArgs<ExtArgs>;
 };
 export type $LinkPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
     name: "Link";
     objects: {
         folder: Prisma.$FolderPayload<ExtArgs>;
+        owner: Prisma.$ProfilePayload<ExtArgs>;
     };
     scalars: runtime.Types.Extensions.GetPayloadResult<{
         id: string;
@@ -405,6 +554,7 @@ export type $LinkPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs =
         url: string;
         createdAt: Date;
         folderId: string;
+        ownerId: string;
     }, ExtArgs["result"]["link"]>;
     composites: {};
 };
@@ -458,6 +608,7 @@ export interface LinkDelegate<ExtArgs extends runtime.Types.Extensions.InternalA
 export interface Prisma__LinkClient<T, Null = never, ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
     readonly [Symbol.toStringTag]: "PrismaPromise";
     folder<T extends Prisma.FolderDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.FolderDefaultArgs<ExtArgs>>): Prisma.Prisma__FolderClient<runtime.Types.Result.GetResult<Prisma.$FolderPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>;
+    owner<T extends Prisma.ProfileDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.ProfileDefaultArgs<ExtArgs>>): Prisma.Prisma__ProfileClient<runtime.Types.Result.GetResult<Prisma.$ProfilePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>;
     then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): runtime.Types.Utils.JsPromise<TResult1 | TResult2>;
     catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): runtime.Types.Utils.JsPromise<T | TResult>;
     finally(onfinally?: (() => void) | undefined | null): runtime.Types.Utils.JsPromise<T>;
@@ -469,6 +620,7 @@ export interface LinkFieldRefs {
     readonly url: Prisma.FieldRef<"Link", 'String'>;
     readonly createdAt: Prisma.FieldRef<"Link", 'DateTime'>;
     readonly folderId: Prisma.FieldRef<"Link", 'String'>;
+    readonly ownerId: Prisma.FieldRef<"Link", 'String'>;
 }
 export type LinkFindUniqueArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
     select?: Prisma.LinkSelect<ExtArgs> | null;

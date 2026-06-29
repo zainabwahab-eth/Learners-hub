@@ -38,7 +38,7 @@ const BookmarksPage = () => {
 
   useEffect(() => {
     if (bookmarkedFoldersData.length > 0) {
-      fetchLinkCounts(bookmarkedFoldersData.map((f) => f.$id));
+      fetchLinkCounts(bookmarkedFoldersData.map((f) => f.id));
     }
   }, [bookmarkedFoldersData, fetchLinkCounts]);
 
@@ -106,13 +106,13 @@ const BookmarksPage = () => {
             <div className="space-y-6">
               {filtered.map((folder) => (
                 <FolderCard
-                  key={folder.$id}
+                  key={folder.id}
                   use="bookmarks"
                   folder={folder}
-                  links={folderLinks[folder.$id] || []}
-                  isLoading={loadingLinks[folder.$id]}
+                  links={folderLinks[folder.id] || []}
+                  isLoading={loadingLinks[folder.id]}
                   isShared={folder.isShared}
-                  onToggleExpand={() => handleToggleExpand(folder.$id)}
+                  onToggleExpand={() => handleToggleExpand(folder.id)}
                 />
               ))}
 

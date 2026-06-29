@@ -11,9 +11,10 @@ export declare const DbNull: import("@prisma/client-runtime-utils").DbNullClass;
 export declare const JsonNull: import("@prisma/client-runtime-utils").JsonNullClass;
 export declare const AnyNull: import("@prisma/client-runtime-utils").AnyNullClass;
 export declare const ModelName: {
-    readonly User: "User";
+    readonly Profile: "Profile";
     readonly Folder: "Folder";
     readonly Link: "Link";
+    readonly Bookmark: "Bookmark";
 };
 export type ModelName = (typeof ModelName)[keyof typeof ModelName];
 export declare const TransactionIsolationLevel: {
@@ -23,21 +24,23 @@ export declare const TransactionIsolationLevel: {
     readonly Serializable: "Serializable";
 };
 export type TransactionIsolationLevel = (typeof TransactionIsolationLevel)[keyof typeof TransactionIsolationLevel];
-export declare const UserScalarFieldEnum: {
+export declare const ProfileScalarFieldEnum: {
     readonly id: "id";
     readonly email: "email";
     readonly name: "name";
-    readonly password: "password";
     readonly avatar: "avatar";
     readonly createdAt: "createdAt";
     readonly updatedAt: "updatedAt";
 };
-export type UserScalarFieldEnum = (typeof UserScalarFieldEnum)[keyof typeof UserScalarFieldEnum];
+export type ProfileScalarFieldEnum = (typeof ProfileScalarFieldEnum)[keyof typeof ProfileScalarFieldEnum];
 export declare const FolderScalarFieldEnum: {
     readonly id: "id";
-    readonly title: "title";
+    readonly folderName: "folderName";
     readonly description: "description";
     readonly isShared: "isShared";
+    readonly sharedAt: "sharedAt";
+    readonly allowContribution: "allowContribution";
+    readonly tags: "tags";
     readonly createdAt: "createdAt";
     readonly updatedAt: "updatedAt";
     readonly ownerId: "ownerId";
@@ -50,8 +53,16 @@ export declare const LinkScalarFieldEnum: {
     readonly url: "url";
     readonly createdAt: "createdAt";
     readonly folderId: "folderId";
+    readonly ownerId: "ownerId";
 };
 export type LinkScalarFieldEnum = (typeof LinkScalarFieldEnum)[keyof typeof LinkScalarFieldEnum];
+export declare const BookmarkScalarFieldEnum: {
+    readonly id: "id";
+    readonly createdAt: "createdAt";
+    readonly folderId: "folderId";
+    readonly ownerId: "ownerId";
+};
+export type BookmarkScalarFieldEnum = (typeof BookmarkScalarFieldEnum)[keyof typeof BookmarkScalarFieldEnum];
 export declare const SortOrder: {
     readonly asc: "asc";
     readonly desc: "desc";

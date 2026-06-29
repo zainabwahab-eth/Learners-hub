@@ -33,7 +33,7 @@ var __importStar = (this && this.__importStar) || (function () {
     };
 })();
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.NullsOrder = exports.QueryMode = exports.SortOrder = exports.LinkScalarFieldEnum = exports.FolderScalarFieldEnum = exports.UserScalarFieldEnum = exports.TransactionIsolationLevel = exports.ModelName = exports.AnyNull = exports.JsonNull = exports.DbNull = exports.NullTypes = exports.Decimal = void 0;
+exports.NullsOrder = exports.QueryMode = exports.SortOrder = exports.BookmarkScalarFieldEnum = exports.LinkScalarFieldEnum = exports.FolderScalarFieldEnum = exports.ProfileScalarFieldEnum = exports.TransactionIsolationLevel = exports.ModelName = exports.AnyNull = exports.JsonNull = exports.DbNull = exports.NullTypes = exports.Decimal = void 0;
 const runtime = __importStar(require("@prisma/client/runtime/index-browser"));
 exports.Decimal = runtime.Decimal;
 exports.NullTypes = {
@@ -45,9 +45,10 @@ exports.DbNull = runtime.DbNull;
 exports.JsonNull = runtime.JsonNull;
 exports.AnyNull = runtime.AnyNull;
 exports.ModelName = {
-    User: 'User',
+    Profile: 'Profile',
     Folder: 'Folder',
-    Link: 'Link'
+    Link: 'Link',
+    Bookmark: 'Bookmark'
 };
 exports.TransactionIsolationLevel = runtime.makeStrictEnum({
     ReadUncommitted: 'ReadUncommitted',
@@ -55,20 +56,22 @@ exports.TransactionIsolationLevel = runtime.makeStrictEnum({
     RepeatableRead: 'RepeatableRead',
     Serializable: 'Serializable'
 });
-exports.UserScalarFieldEnum = {
+exports.ProfileScalarFieldEnum = {
     id: 'id',
     email: 'email',
     name: 'name',
-    password: 'password',
     avatar: 'avatar',
     createdAt: 'createdAt',
     updatedAt: 'updatedAt'
 };
 exports.FolderScalarFieldEnum = {
     id: 'id',
-    title: 'title',
+    folderName: 'folderName',
     description: 'description',
     isShared: 'isShared',
+    sharedAt: 'sharedAt',
+    allowContribution: 'allowContribution',
+    tags: 'tags',
     createdAt: 'createdAt',
     updatedAt: 'updatedAt',
     ownerId: 'ownerId'
@@ -79,7 +82,14 @@ exports.LinkScalarFieldEnum = {
     description: 'description',
     url: 'url',
     createdAt: 'createdAt',
-    folderId: 'folderId'
+    folderId: 'folderId',
+    ownerId: 'ownerId'
+};
+exports.BookmarkScalarFieldEnum = {
+    id: 'id',
+    createdAt: 'createdAt',
+    folderId: 'folderId',
+    ownerId: 'ownerId'
 };
 exports.SortOrder = {
     asc: 'asc',

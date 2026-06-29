@@ -37,7 +37,7 @@ const CommunityPage = () => {
 
   useEffect(() => {
     if (sharedFolders.length > 0) {
-      fetchLinkCounts(sharedFolders.map((f) => f.$id));
+      fetchLinkCounts(sharedFolders.map((f) => f.id));
     }
   }, [sharedFolders, fetchLinkCounts]);
 
@@ -96,7 +96,7 @@ const CommunityPage = () => {
               Shared Folders ({filtered.length || 0})
             </h2>
             <p className="text-gray-600 text-sm">
-              Here's you folders bookmarked
+              Shared folders by the community
             </p>
           </div>
 
@@ -105,12 +105,12 @@ const CommunityPage = () => {
             <div className="space-y-6">
               {filtered.map((folder) => (
                 <FolderCard
-                  key={folder.$id}
+                  key={folder.id}
                   use="community"
                   folder={folder}
-                  links={folderLinks[folder.$id] || []}
-                  isLoading={loadingLinks[folder.$id]}
-                  onToggleExpand={() => handleToggleExpand(folder.$id)}
+                  links={folderLinks[folder.id] || []}
+                  isLoading={loadingLinks[folder.id]}
+                  onToggleExpand={() => handleToggleExpand(folder.id)}
                 />
               ))}
 

@@ -14,7 +14,7 @@ const Login = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState("");
   const { login, AuthWithGoogle } = useAuth();
-  const showAlert = useAlert();
+  const { showAlert } = useAlert();
   const {
     register,
     handleSubmit,
@@ -26,7 +26,7 @@ const Login = () => {
       await AuthWithGoogle();
     } catch (err) {
       console.error("Error logging in with google", err);
-      showAlert("Error logging in. Please try again", 'error');
+      showAlert("Error logging in. Please try again", "error");
     }
   };
 
@@ -39,7 +39,7 @@ const Login = () => {
     } catch (err) {
       setError("Invalid credentials");
       console.error("Login failed", err.message);
-      showAlert("Error logging in. Please try again", 'error');
+      showAlert("Error logging in. Please try again", "error");
     }
   };
   return (

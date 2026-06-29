@@ -57,7 +57,7 @@ const FolderCard = ({
     try {
       if (confirm("Are you sure you want to delete this Link?")) {
         await deleteLink(linkId, folderId);
-        setFolderLinks((prev) => prev.filter((l) => l.$id !== linkId));
+        setFolderLinks((prev) => prev.filter((l) => l.id !== linkId));
 
         if (onLinkDeleted) {
           onLinkDeleted(folderId, linkId);
@@ -71,7 +71,7 @@ const FolderCard = ({
   };
 
   const handlShareModal = () => {
-    if (linkCounts[folder.$id] === undefined) {
+    if (linkCounts[folder.id] === undefined) {
       setShowMenu(false);
       showAlert("You can't share a folder with no link", "info");
     }
@@ -81,12 +81,11 @@ const FolderCard = ({
   const handleShareFolder = async (folderData, type) => {
     try {
       if (type === "share") {
-        updateFolder(folder.$id, {
+        updateFolder(folder.id, {
           folderName: folderData.folderName,
           description: folderData.description,
           tags: folderData.tags,
           isShared: true,
-          sharedAt: new Date().toISOString(),
           allowContribution: folderData.allowContribution || false,
         });
       }
@@ -100,7 +99,7 @@ const FolderCard = ({
 
   const handleBookmark = async (folder) => {
     try {
-      await toggleBookmark(folder.$id);
+      await toggleBookmark(folder.id);
       showAlert("Bookmark updated successfully!", "success");
     } catch (err) {
       console.error("Error toggling bookmark:", err);
@@ -136,7 +135,7 @@ const FolderCard = ({
                     }}
                     className="p-2 text-gray-600 hover:bg-gray-100 rounded-lg transition-colors"
                   >
-                    {isBookmarked(folder.$id) ? (
+                    {isBookmarked(folder.id) ? (
                       <BookmarkCheck className="w-5 h-5 text-primary" />
                     ) : (
                       <Bookmark className="w-5 h-5" />
@@ -182,10 +181,10 @@ const FolderCard = ({
                       {!isShared && (
                         <button
                           onClick={handlShareModal}
-                          disabled={linkCounts[folder.$id] === 0}
+                          disabled={linkCounts[folder.id] === 0}
                           className={`w-full text-left px-4 py-2 rounded-lg font-medium
     ${
-      linkCounts[folder.$id] === 0
+      linkCounts[folder.id] === 0
         ? "bg-gray-50 text-gray-500 cursor-not-allowed"
         : "text-gray-700 hover:bg-gray-50 transition-colors"
     }`}
@@ -228,14 +227,14 @@ const FolderCard = ({
             {isShared && <Globe className="w-4 h-4" />}
             <Link2 className="w-5 h-4 text-primary" />
             <span className="text-primary font-semibold">
-              {linkCounts[folder.$id] || 0} links
+              {linkCounts[folder.id] || 0} links
             </span>
           </div>
           {use === "dashboard" && (
             <div className="flex items-center space-x-2 text-gray-500">
               <Calendar className="w-4 h-4" />
               <span>
-                {new Date(folder.$createdAt).toLocaleDateString("en-GB", {
+                {new Date(folder.createdAt).toLocaleDateString("en-GB", {
                   day: "2-digit",
                   month: "short",
                   year: "numeric",
@@ -265,9 +264,9 @@ const FolderCard = ({
           ) : (
             links.map((link) => (
               <LinkItem
-                key={link.$id}
+                key={link.id}
                 {...link}
-                onDelete={() => handleDeleteLink(link.$id, folder.$id)}
+                onDelete={() => handleDeleteLink(link.id, folder.id)}
                 use={use}
               />
             ))

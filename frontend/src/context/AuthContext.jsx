@@ -1,162 +1,95 @@
-import { ID, Query } from "appwrite";
 import { useState, useEffect } from "react";
-import { account, tablesDB } from "../lib/appwrite";
+import { supabase } from "../lib/supabase";
 import { AuthContext } from "./useContext";
 import LoadingPage from "../pages/Loading";
 
+const normalizeUser = (supabaseUser) =>
+  supabaseUser
+    ? {
+        id: supabaseUser.id,
+        email: supabaseUser.email,
+        name:
+          supabaseUser.user_metadata?.name ??
+          supabaseUser.user_metadata?.full_name ??
+          supabaseUser.email,
+      }
+    : null;
+
 export const AuthProvider = ({ children }) => {
-  const DATABASE_ID = import.meta.env.VITE_APPWRITE_DATABASE_ID;
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
 
-  //Check if user is already loggedIn
-  const checkUserStatus = async () => {
-    setLoading(true);
-    try {
-      const currentUser = await account.get();
-      setUser(currentUser);
-      setLoading(false);
-      return currentUser;
-    } catch (err) {
-      console.error("No active user", err.message);
-      setUser(null);
-      return null;
-    } finally {
-      setLoading(false);
-    }
-  };
-
   //Signup
   const signup = async (email, password, name) => {
-    try {
-      await account.create({
-        userId: ID.unique(),
-        email,
-        password,
-        name,
-      });
-
-      await account.createEmailPasswordSession({
-        email,
-        password,
-      });
-
-      const currentUser = await account.get();
-      setUser(currentUser);
-
-      return currentUser;
-    } catch (err) {
-      console.error("Signup err", err.message, err);
-      throw err;
+    const { data, error } = await supabase.auth.signUp({
+      email,
+      password,
+      options: { data: { name } },
+    });
+    if (error) {
+      console.error("Signup err", error.message);
+      throw error;
     }
+    return normalizeUser(data.user);
   };
 
   //Login
   const login = async (email, password) => {
-    try {
-      await account.createEmailPasswordSession({
-        email,
-        password,
-      });
-      await checkUserStatus();
-    } catch (err) {
-      console.error("Login err", err.message, err);
-      throw err;
+    const { error } = await supabase.auth.signInWithPassword({
+      email,
+      password,
+    });
+    if (error) {
+      console.error("Login err", error.message);
+      throw error;
     }
   };
 
   //Goggle Login / Signup
   const AuthWithGoogle = async () => {
-    const origin = window.location.origin;
-    const successUrl = `${origin}/auth/callback`;
-    const failureUrl = `${origin}/login`;
-
-    console.log("Current origin:", origin);
-    console.log("Success URL:", successUrl);
-    console.log("Failure URL:", failureUrl);
-
-    account.createOAuth2Token("google", successUrl, failureUrl);
+    const { error } = await supabase.auth.signInWithOAuth({
+      provider: "google",
+      options: { redirectTo: `${window.location.origin}/auth/callback` },
+    });
+    if (error) {
+      console.error("Google auth err", error.message);
+      throw error;
+    }
   };
 
   //Logout
   const logout = async () => {
-    try {
-      await account.deleteSession({
-        sessionId: "current",
-      });
-      setUser(null);
-    } catch (err) {
-      console.error("Logout error:", err);
-      throw err;
+    const { error } = await supabase.auth.signOut();
+    if (error) {
+      console.error("Logout error:", error);
+      throw error;
     }
-  };
-
-  //Save user info after signup
-  const saveUserProfile = async (userId, email, name) => {
-    try {
-      await tablesDB.createRow({
-        databaseId: DATABASE_ID,
-        tableId: "profiles",
-        rowId: ID.unique(),
-        data: {
-          userId,
-          email,
-          name,
-        },
-      });
-    } catch (err) {
-      if (err.message.includes("already exists")) {
-        console.log("Profile already exists, skipping...");
-      } else {
-        throw err;
-      }
-    }
-  };
-
-  const syncProfile = async (currentUser) => {
-    try {
-      const existing = await tablesDB.listRows({
-        databaseId: DATABASE_ID,
-        tableId: "profiles",
-        queries: [Query.equal("userId", currentUser.$id)],
-      });
-
-      if (existing.rows.length === 0) {
-        await saveUserProfile(
-          currentUser.$id,
-          currentUser.email,
-          currentUser.name || "Google User"
-        );
-      }
-
-      setUser(currentUser);
-    } catch (err) {
-      console.err("Error syncing profile", err);
-      throw err;
-    }
+    setUser(null);
   };
 
   useEffect(() => {
-    const handleInitialLoad = async () => {
-      const currentUser = await checkUserStatus();
-      if (currentUser) {
-        await syncProfile(currentUser);
-      }
-    };
+    supabase.auth.getSession().then(({ data }) => {
+      setUser(normalizeUser(data.session?.user ?? null));
+      setLoading(false);
+    });
 
-    handleInitialLoad();
+    const {
+      data: { subscription },
+    } = supabase.auth.onAuthStateChange((_event, session) => {
+      setUser(normalizeUser(session?.user ?? null));
+      setLoading(false);
+    });
+
+    return () => subscription.unsubscribe();
   }, []);
 
   const value = {
     user,
     loading,
-    checkUserStatus,
     AuthWithGoogle,
     signup,
     login,
     logout,
-    saveUserProfile,
-    syncProfile,
   };
 
   if (loading) {

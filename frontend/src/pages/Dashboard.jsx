@@ -48,7 +48,7 @@ const Dashboard = () => {
 
   useEffect(() => {
     if (folders.length > 0) {
-      fetchLinkCounts(folders.map((f) => f.$id));
+      fetchLinkCounts(folders.map((f) => f.id));
     }
   }, [folders, fetchLinkCounts]);
 
@@ -119,7 +119,7 @@ const Dashboard = () => {
   const handleLinkDeleted = (folderId, linkId) => {
     setFolderLinks((prev) => ({
       ...prev,
-      [folderId]: (prev[folderId] || []).filter((l) => l.$id !== linkId),
+      [folderId]: (prev[folderId] || []).filter((l) => l.id !== linkId),
     }));
   };
 
@@ -159,17 +159,17 @@ const Dashboard = () => {
             <div className="space-y-6">
               {folders.map((folder) => (
                 <FolderCard
-                  key={folder.$id}
+                  key={folder.id}
                   folder={folder}
-                  links={folderLinks[folder.$id] || []}
-                  isLoading={loadingLinks[folder.$id]}
-                  onToggleExpand={() => handleToggleExpand(folder.$id)}
+                  links={folderLinks[folder.id] || []}
+                  isLoading={loadingLinks[folder.id]}
+                  onToggleExpand={() => handleToggleExpand(folder.id)}
                   onAddLink={() => {
                     setIsAddLinkModalOpen(true);
-                    setFolderId(folder.$id);
+                    setFolderId(folder.id);
                   }}
                   isShared={folder.isShared}
-                  onDelete={() => handleDelete(folder.$id)}
+                  onDelete={() => handleDelete(folder.id)}
                   onLinkDeleted={handleLinkDeleted}
                 />
               ))}

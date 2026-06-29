@@ -28,13 +28,16 @@ export interface PrismaClient<in LogOpts extends Prisma.LogLevel = never, in out
     $extends: runtime.Types.Extensions.ExtendsHook<"extends", Prisma.TypeMapCb<OmitOpts>, ExtArgs, runtime.Types.Utils.Call<Prisma.TypeMapCb<OmitOpts>, {
         extArgs: ExtArgs;
     }>>;
-    get user(): Prisma.UserDelegate<ExtArgs, {
+    get profile(): Prisma.ProfileDelegate<ExtArgs, {
         omit: OmitOpts;
     }>;
     get folder(): Prisma.FolderDelegate<ExtArgs, {
         omit: OmitOpts;
     }>;
     get link(): Prisma.LinkDelegate<ExtArgs, {
+        omit: OmitOpts;
+    }>;
+    get bookmark(): Prisma.BookmarkDelegate<ExtArgs, {
         omit: OmitOpts;
     }>;
 }

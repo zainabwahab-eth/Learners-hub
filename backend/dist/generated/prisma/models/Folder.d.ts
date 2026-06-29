@@ -8,27 +8,34 @@ export type AggregateFolder = {
 };
 export type FolderMinAggregateOutputType = {
     id: string | null;
-    title: string | null;
+    folderName: string | null;
     description: string | null;
     isShared: boolean | null;
+    sharedAt: Date | null;
+    allowContribution: boolean | null;
     createdAt: Date | null;
     updatedAt: Date | null;
     ownerId: string | null;
 };
 export type FolderMaxAggregateOutputType = {
     id: string | null;
-    title: string | null;
+    folderName: string | null;
     description: string | null;
     isShared: boolean | null;
+    sharedAt: Date | null;
+    allowContribution: boolean | null;
     createdAt: Date | null;
     updatedAt: Date | null;
     ownerId: string | null;
 };
 export type FolderCountAggregateOutputType = {
     id: number;
-    title: number;
+    folderName: number;
     description: number;
     isShared: number;
+    sharedAt: number;
+    allowContribution: number;
+    tags: number;
     createdAt: number;
     updatedAt: number;
     ownerId: number;
@@ -36,27 +43,34 @@ export type FolderCountAggregateOutputType = {
 };
 export type FolderMinAggregateInputType = {
     id?: true;
-    title?: true;
+    folderName?: true;
     description?: true;
     isShared?: true;
+    sharedAt?: true;
+    allowContribution?: true;
     createdAt?: true;
     updatedAt?: true;
     ownerId?: true;
 };
 export type FolderMaxAggregateInputType = {
     id?: true;
-    title?: true;
+    folderName?: true;
     description?: true;
     isShared?: true;
+    sharedAt?: true;
+    allowContribution?: true;
     createdAt?: true;
     updatedAt?: true;
     ownerId?: true;
 };
 export type FolderCountAggregateInputType = {
     id?: true;
-    title?: true;
+    folderName?: true;
     description?: true;
     isShared?: true;
+    sharedAt?: true;
+    allowContribution?: true;
+    tags?: true;
     createdAt?: true;
     updatedAt?: true;
     ownerId?: true;
@@ -88,9 +102,12 @@ export type FolderGroupByArgs<ExtArgs extends runtime.Types.Extensions.InternalA
 };
 export type FolderGroupByOutputType = {
     id: string;
-    title: string;
+    folderName: string;
     description: string | null;
     isShared: boolean;
+    sharedAt: Date | null;
+    allowContribution: boolean;
+    tags: string[];
     createdAt: Date;
     updatedAt: Date;
     ownerId: string;
@@ -106,45 +123,60 @@ export type FolderWhereInput = {
     OR?: Prisma.FolderWhereInput[];
     NOT?: Prisma.FolderWhereInput | Prisma.FolderWhereInput[];
     id?: Prisma.StringFilter<"Folder"> | string;
-    title?: Prisma.StringFilter<"Folder"> | string;
+    folderName?: Prisma.StringFilter<"Folder"> | string;
     description?: Prisma.StringNullableFilter<"Folder"> | string | null;
     isShared?: Prisma.BoolFilter<"Folder"> | boolean;
+    sharedAt?: Prisma.DateTimeNullableFilter<"Folder"> | Date | string | null;
+    allowContribution?: Prisma.BoolFilter<"Folder"> | boolean;
+    tags?: Prisma.StringNullableListFilter<"Folder">;
     createdAt?: Prisma.DateTimeFilter<"Folder"> | Date | string;
     updatedAt?: Prisma.DateTimeFilter<"Folder"> | Date | string;
     ownerId?: Prisma.StringFilter<"Folder"> | string;
-    owner?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>;
+    owner?: Prisma.XOR<Prisma.ProfileScalarRelationFilter, Prisma.ProfileWhereInput>;
     links?: Prisma.LinkListRelationFilter;
+    bookmarks?: Prisma.BookmarkListRelationFilter;
 };
 export type FolderOrderByWithRelationInput = {
     id?: Prisma.SortOrder;
-    title?: Prisma.SortOrder;
+    folderName?: Prisma.SortOrder;
     description?: Prisma.SortOrderInput | Prisma.SortOrder;
     isShared?: Prisma.SortOrder;
+    sharedAt?: Prisma.SortOrderInput | Prisma.SortOrder;
+    allowContribution?: Prisma.SortOrder;
+    tags?: Prisma.SortOrder;
     createdAt?: Prisma.SortOrder;
     updatedAt?: Prisma.SortOrder;
     ownerId?: Prisma.SortOrder;
-    owner?: Prisma.UserOrderByWithRelationInput;
+    owner?: Prisma.ProfileOrderByWithRelationInput;
     links?: Prisma.LinkOrderByRelationAggregateInput;
+    bookmarks?: Prisma.BookmarkOrderByRelationAggregateInput;
 };
 export type FolderWhereUniqueInput = Prisma.AtLeast<{
     id?: string;
     AND?: Prisma.FolderWhereInput | Prisma.FolderWhereInput[];
     OR?: Prisma.FolderWhereInput[];
     NOT?: Prisma.FolderWhereInput | Prisma.FolderWhereInput[];
-    title?: Prisma.StringFilter<"Folder"> | string;
+    folderName?: Prisma.StringFilter<"Folder"> | string;
     description?: Prisma.StringNullableFilter<"Folder"> | string | null;
     isShared?: Prisma.BoolFilter<"Folder"> | boolean;
+    sharedAt?: Prisma.DateTimeNullableFilter<"Folder"> | Date | string | null;
+    allowContribution?: Prisma.BoolFilter<"Folder"> | boolean;
+    tags?: Prisma.StringNullableListFilter<"Folder">;
     createdAt?: Prisma.DateTimeFilter<"Folder"> | Date | string;
     updatedAt?: Prisma.DateTimeFilter<"Folder"> | Date | string;
     ownerId?: Prisma.StringFilter<"Folder"> | string;
-    owner?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>;
+    owner?: Prisma.XOR<Prisma.ProfileScalarRelationFilter, Prisma.ProfileWhereInput>;
     links?: Prisma.LinkListRelationFilter;
+    bookmarks?: Prisma.BookmarkListRelationFilter;
 }, "id">;
 export type FolderOrderByWithAggregationInput = {
     id?: Prisma.SortOrder;
-    title?: Prisma.SortOrder;
+    folderName?: Prisma.SortOrder;
     description?: Prisma.SortOrderInput | Prisma.SortOrder;
     isShared?: Prisma.SortOrder;
+    sharedAt?: Prisma.SortOrderInput | Prisma.SortOrder;
+    allowContribution?: Prisma.SortOrder;
+    tags?: Prisma.SortOrder;
     createdAt?: Prisma.SortOrder;
     updatedAt?: Prisma.SortOrder;
     ownerId?: Prisma.SortOrder;
@@ -157,75 +189,103 @@ export type FolderScalarWhereWithAggregatesInput = {
     OR?: Prisma.FolderScalarWhereWithAggregatesInput[];
     NOT?: Prisma.FolderScalarWhereWithAggregatesInput | Prisma.FolderScalarWhereWithAggregatesInput[];
     id?: Prisma.StringWithAggregatesFilter<"Folder"> | string;
-    title?: Prisma.StringWithAggregatesFilter<"Folder"> | string;
+    folderName?: Prisma.StringWithAggregatesFilter<"Folder"> | string;
     description?: Prisma.StringNullableWithAggregatesFilter<"Folder"> | string | null;
     isShared?: Prisma.BoolWithAggregatesFilter<"Folder"> | boolean;
+    sharedAt?: Prisma.DateTimeNullableWithAggregatesFilter<"Folder"> | Date | string | null;
+    allowContribution?: Prisma.BoolWithAggregatesFilter<"Folder"> | boolean;
+    tags?: Prisma.StringNullableListFilter<"Folder">;
     createdAt?: Prisma.DateTimeWithAggregatesFilter<"Folder"> | Date | string;
     updatedAt?: Prisma.DateTimeWithAggregatesFilter<"Folder"> | Date | string;
     ownerId?: Prisma.StringWithAggregatesFilter<"Folder"> | string;
 };
 export type FolderCreateInput = {
     id?: string;
-    title: string;
+    folderName: string;
     description?: string | null;
     isShared?: boolean;
+    sharedAt?: Date | string | null;
+    allowContribution?: boolean;
+    tags?: Prisma.FolderCreatetagsInput | string[];
     createdAt?: Date | string;
     updatedAt?: Date | string;
-    owner: Prisma.UserCreateNestedOneWithoutFoldersInput;
+    owner: Prisma.ProfileCreateNestedOneWithoutFoldersInput;
     links?: Prisma.LinkCreateNestedManyWithoutFolderInput;
+    bookmarks?: Prisma.BookmarkCreateNestedManyWithoutFolderInput;
 };
 export type FolderUncheckedCreateInput = {
     id?: string;
-    title: string;
+    folderName: string;
     description?: string | null;
     isShared?: boolean;
+    sharedAt?: Date | string | null;
+    allowContribution?: boolean;
+    tags?: Prisma.FolderCreatetagsInput | string[];
     createdAt?: Date | string;
     updatedAt?: Date | string;
     ownerId: string;
     links?: Prisma.LinkUncheckedCreateNestedManyWithoutFolderInput;
+    bookmarks?: Prisma.BookmarkUncheckedCreateNestedManyWithoutFolderInput;
 };
 export type FolderUpdateInput = {
     id?: Prisma.StringFieldUpdateOperationsInput | string;
-    title?: Prisma.StringFieldUpdateOperationsInput | string;
+    folderName?: Prisma.StringFieldUpdateOperationsInput | string;
     description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     isShared?: Prisma.BoolFieldUpdateOperationsInput | boolean;
+    sharedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null;
+    allowContribution?: Prisma.BoolFieldUpdateOperationsInput | boolean;
+    tags?: Prisma.FolderUpdatetagsInput | string[];
     createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
     updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
-    owner?: Prisma.UserUpdateOneRequiredWithoutFoldersNestedInput;
+    owner?: Prisma.ProfileUpdateOneRequiredWithoutFoldersNestedInput;
     links?: Prisma.LinkUpdateManyWithoutFolderNestedInput;
+    bookmarks?: Prisma.BookmarkUpdateManyWithoutFolderNestedInput;
 };
 export type FolderUncheckedUpdateInput = {
     id?: Prisma.StringFieldUpdateOperationsInput | string;
-    title?: Prisma.StringFieldUpdateOperationsInput | string;
+    folderName?: Prisma.StringFieldUpdateOperationsInput | string;
     description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     isShared?: Prisma.BoolFieldUpdateOperationsInput | boolean;
+    sharedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null;
+    allowContribution?: Prisma.BoolFieldUpdateOperationsInput | boolean;
+    tags?: Prisma.FolderUpdatetagsInput | string[];
     createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
     updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
     ownerId?: Prisma.StringFieldUpdateOperationsInput | string;
     links?: Prisma.LinkUncheckedUpdateManyWithoutFolderNestedInput;
+    bookmarks?: Prisma.BookmarkUncheckedUpdateManyWithoutFolderNestedInput;
 };
 export type FolderCreateManyInput = {
     id?: string;
-    title: string;
+    folderName: string;
     description?: string | null;
     isShared?: boolean;
+    sharedAt?: Date | string | null;
+    allowContribution?: boolean;
+    tags?: Prisma.FolderCreatetagsInput | string[];
     createdAt?: Date | string;
     updatedAt?: Date | string;
     ownerId: string;
 };
 export type FolderUpdateManyMutationInput = {
     id?: Prisma.StringFieldUpdateOperationsInput | string;
-    title?: Prisma.StringFieldUpdateOperationsInput | string;
+    folderName?: Prisma.StringFieldUpdateOperationsInput | string;
     description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     isShared?: Prisma.BoolFieldUpdateOperationsInput | boolean;
+    sharedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null;
+    allowContribution?: Prisma.BoolFieldUpdateOperationsInput | boolean;
+    tags?: Prisma.FolderUpdatetagsInput | string[];
     createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
     updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
 };
 export type FolderUncheckedUpdateManyInput = {
     id?: Prisma.StringFieldUpdateOperationsInput | string;
-    title?: Prisma.StringFieldUpdateOperationsInput | string;
+    folderName?: Prisma.StringFieldUpdateOperationsInput | string;
     description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     isShared?: Prisma.BoolFieldUpdateOperationsInput | boolean;
+    sharedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null;
+    allowContribution?: Prisma.BoolFieldUpdateOperationsInput | boolean;
+    tags?: Prisma.FolderUpdatetagsInput | string[];
     createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
     updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
     ownerId?: Prisma.StringFieldUpdateOperationsInput | string;
@@ -238,29 +298,43 @@ export type FolderListRelationFilter = {
 export type FolderOrderByRelationAggregateInput = {
     _count?: Prisma.SortOrder;
 };
+export type StringNullableListFilter<$PrismaModel = never> = {
+    equals?: string[] | Prisma.ListStringFieldRefInput<$PrismaModel> | null;
+    has?: string | Prisma.StringFieldRefInput<$PrismaModel> | null;
+    hasEvery?: string[] | Prisma.ListStringFieldRefInput<$PrismaModel>;
+    hasSome?: string[] | Prisma.ListStringFieldRefInput<$PrismaModel>;
+    isEmpty?: boolean;
+};
 export type FolderCountOrderByAggregateInput = {
     id?: Prisma.SortOrder;
-    title?: Prisma.SortOrder;
+    folderName?: Prisma.SortOrder;
     description?: Prisma.SortOrder;
     isShared?: Prisma.SortOrder;
+    sharedAt?: Prisma.SortOrder;
+    allowContribution?: Prisma.SortOrder;
+    tags?: Prisma.SortOrder;
     createdAt?: Prisma.SortOrder;
     updatedAt?: Prisma.SortOrder;
     ownerId?: Prisma.SortOrder;
 };
 export type FolderMaxOrderByAggregateInput = {
     id?: Prisma.SortOrder;
-    title?: Prisma.SortOrder;
+    folderName?: Prisma.SortOrder;
     description?: Prisma.SortOrder;
     isShared?: Prisma.SortOrder;
+    sharedAt?: Prisma.SortOrder;
+    allowContribution?: Prisma.SortOrder;
     createdAt?: Prisma.SortOrder;
     updatedAt?: Prisma.SortOrder;
     ownerId?: Prisma.SortOrder;
 };
 export type FolderMinOrderByAggregateInput = {
     id?: Prisma.SortOrder;
-    title?: Prisma.SortOrder;
+    folderName?: Prisma.SortOrder;
     description?: Prisma.SortOrder;
     isShared?: Prisma.SortOrder;
+    sharedAt?: Prisma.SortOrder;
+    allowContribution?: Prisma.SortOrder;
     createdAt?: Prisma.SortOrder;
     updatedAt?: Prisma.SortOrder;
     ownerId?: Prisma.SortOrder;
@@ -307,8 +381,18 @@ export type FolderUncheckedUpdateManyWithoutOwnerNestedInput = {
     updateMany?: Prisma.FolderUpdateManyWithWhereWithoutOwnerInput | Prisma.FolderUpdateManyWithWhereWithoutOwnerInput[];
     deleteMany?: Prisma.FolderScalarWhereInput | Prisma.FolderScalarWhereInput[];
 };
+export type FolderCreatetagsInput = {
+    set: string[];
+};
 export type BoolFieldUpdateOperationsInput = {
     set?: boolean;
+};
+export type NullableDateTimeFieldUpdateOperationsInput = {
+    set?: Date | string | null;
+};
+export type FolderUpdatetagsInput = {
+    set?: string[];
+    push?: string | string[];
 };
 export type FolderCreateNestedOneWithoutLinksInput = {
     create?: Prisma.XOR<Prisma.FolderCreateWithoutLinksInput, Prisma.FolderUncheckedCreateWithoutLinksInput>;
@@ -322,23 +406,43 @@ export type FolderUpdateOneRequiredWithoutLinksNestedInput = {
     connect?: Prisma.FolderWhereUniqueInput;
     update?: Prisma.XOR<Prisma.XOR<Prisma.FolderUpdateToOneWithWhereWithoutLinksInput, Prisma.FolderUpdateWithoutLinksInput>, Prisma.FolderUncheckedUpdateWithoutLinksInput>;
 };
+export type FolderCreateNestedOneWithoutBookmarksInput = {
+    create?: Prisma.XOR<Prisma.FolderCreateWithoutBookmarksInput, Prisma.FolderUncheckedCreateWithoutBookmarksInput>;
+    connectOrCreate?: Prisma.FolderCreateOrConnectWithoutBookmarksInput;
+    connect?: Prisma.FolderWhereUniqueInput;
+};
+export type FolderUpdateOneRequiredWithoutBookmarksNestedInput = {
+    create?: Prisma.XOR<Prisma.FolderCreateWithoutBookmarksInput, Prisma.FolderUncheckedCreateWithoutBookmarksInput>;
+    connectOrCreate?: Prisma.FolderCreateOrConnectWithoutBookmarksInput;
+    upsert?: Prisma.FolderUpsertWithoutBookmarksInput;
+    connect?: Prisma.FolderWhereUniqueInput;
+    update?: Prisma.XOR<Prisma.XOR<Prisma.FolderUpdateToOneWithWhereWithoutBookmarksInput, Prisma.FolderUpdateWithoutBookmarksInput>, Prisma.FolderUncheckedUpdateWithoutBookmarksInput>;
+};
 export type FolderCreateWithoutOwnerInput = {
     id?: string;
-    title: string;
+    folderName: string;
     description?: string | null;
     isShared?: boolean;
+    sharedAt?: Date | string | null;
+    allowContribution?: boolean;
+    tags?: Prisma.FolderCreatetagsInput | string[];
     createdAt?: Date | string;
     updatedAt?: Date | string;
     links?: Prisma.LinkCreateNestedManyWithoutFolderInput;
+    bookmarks?: Prisma.BookmarkCreateNestedManyWithoutFolderInput;
 };
 export type FolderUncheckedCreateWithoutOwnerInput = {
     id?: string;
-    title: string;
+    folderName: string;
     description?: string | null;
     isShared?: boolean;
+    sharedAt?: Date | string | null;
+    allowContribution?: boolean;
+    tags?: Prisma.FolderCreatetagsInput | string[];
     createdAt?: Date | string;
     updatedAt?: Date | string;
     links?: Prisma.LinkUncheckedCreateNestedManyWithoutFolderInput;
+    bookmarks?: Prisma.BookmarkUncheckedCreateNestedManyWithoutFolderInput;
 };
 export type FolderCreateOrConnectWithoutOwnerInput = {
     where: Prisma.FolderWhereUniqueInput;
@@ -366,30 +470,41 @@ export type FolderScalarWhereInput = {
     OR?: Prisma.FolderScalarWhereInput[];
     NOT?: Prisma.FolderScalarWhereInput | Prisma.FolderScalarWhereInput[];
     id?: Prisma.StringFilter<"Folder"> | string;
-    title?: Prisma.StringFilter<"Folder"> | string;
+    folderName?: Prisma.StringFilter<"Folder"> | string;
     description?: Prisma.StringNullableFilter<"Folder"> | string | null;
     isShared?: Prisma.BoolFilter<"Folder"> | boolean;
+    sharedAt?: Prisma.DateTimeNullableFilter<"Folder"> | Date | string | null;
+    allowContribution?: Prisma.BoolFilter<"Folder"> | boolean;
+    tags?: Prisma.StringNullableListFilter<"Folder">;
     createdAt?: Prisma.DateTimeFilter<"Folder"> | Date | string;
     updatedAt?: Prisma.DateTimeFilter<"Folder"> | Date | string;
     ownerId?: Prisma.StringFilter<"Folder"> | string;
 };
 export type FolderCreateWithoutLinksInput = {
     id?: string;
-    title: string;
+    folderName: string;
     description?: string | null;
     isShared?: boolean;
+    sharedAt?: Date | string | null;
+    allowContribution?: boolean;
+    tags?: Prisma.FolderCreatetagsInput | string[];
     createdAt?: Date | string;
     updatedAt?: Date | string;
-    owner: Prisma.UserCreateNestedOneWithoutFoldersInput;
+    owner: Prisma.ProfileCreateNestedOneWithoutFoldersInput;
+    bookmarks?: Prisma.BookmarkCreateNestedManyWithoutFolderInput;
 };
 export type FolderUncheckedCreateWithoutLinksInput = {
     id?: string;
-    title: string;
+    folderName: string;
     description?: string | null;
     isShared?: boolean;
+    sharedAt?: Date | string | null;
+    allowContribution?: boolean;
+    tags?: Prisma.FolderCreatetagsInput | string[];
     createdAt?: Date | string;
     updatedAt?: Date | string;
     ownerId: string;
+    bookmarks?: Prisma.BookmarkUncheckedCreateNestedManyWithoutFolderInput;
 };
 export type FolderCreateOrConnectWithoutLinksInput = {
     where: Prisma.FolderWhereUniqueInput;
@@ -406,61 +521,150 @@ export type FolderUpdateToOneWithWhereWithoutLinksInput = {
 };
 export type FolderUpdateWithoutLinksInput = {
     id?: Prisma.StringFieldUpdateOperationsInput | string;
-    title?: Prisma.StringFieldUpdateOperationsInput | string;
+    folderName?: Prisma.StringFieldUpdateOperationsInput | string;
     description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     isShared?: Prisma.BoolFieldUpdateOperationsInput | boolean;
+    sharedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null;
+    allowContribution?: Prisma.BoolFieldUpdateOperationsInput | boolean;
+    tags?: Prisma.FolderUpdatetagsInput | string[];
     createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
     updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
-    owner?: Prisma.UserUpdateOneRequiredWithoutFoldersNestedInput;
+    owner?: Prisma.ProfileUpdateOneRequiredWithoutFoldersNestedInput;
+    bookmarks?: Prisma.BookmarkUpdateManyWithoutFolderNestedInput;
 };
 export type FolderUncheckedUpdateWithoutLinksInput = {
     id?: Prisma.StringFieldUpdateOperationsInput | string;
-    title?: Prisma.StringFieldUpdateOperationsInput | string;
+    folderName?: Prisma.StringFieldUpdateOperationsInput | string;
     description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     isShared?: Prisma.BoolFieldUpdateOperationsInput | boolean;
+    sharedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null;
+    allowContribution?: Prisma.BoolFieldUpdateOperationsInput | boolean;
+    tags?: Prisma.FolderUpdatetagsInput | string[];
     createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
     updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
     ownerId?: Prisma.StringFieldUpdateOperationsInput | string;
+    bookmarks?: Prisma.BookmarkUncheckedUpdateManyWithoutFolderNestedInput;
+};
+export type FolderCreateWithoutBookmarksInput = {
+    id?: string;
+    folderName: string;
+    description?: string | null;
+    isShared?: boolean;
+    sharedAt?: Date | string | null;
+    allowContribution?: boolean;
+    tags?: Prisma.FolderCreatetagsInput | string[];
+    createdAt?: Date | string;
+    updatedAt?: Date | string;
+    owner: Prisma.ProfileCreateNestedOneWithoutFoldersInput;
+    links?: Prisma.LinkCreateNestedManyWithoutFolderInput;
+};
+export type FolderUncheckedCreateWithoutBookmarksInput = {
+    id?: string;
+    folderName: string;
+    description?: string | null;
+    isShared?: boolean;
+    sharedAt?: Date | string | null;
+    allowContribution?: boolean;
+    tags?: Prisma.FolderCreatetagsInput | string[];
+    createdAt?: Date | string;
+    updatedAt?: Date | string;
+    ownerId: string;
+    links?: Prisma.LinkUncheckedCreateNestedManyWithoutFolderInput;
+};
+export type FolderCreateOrConnectWithoutBookmarksInput = {
+    where: Prisma.FolderWhereUniqueInput;
+    create: Prisma.XOR<Prisma.FolderCreateWithoutBookmarksInput, Prisma.FolderUncheckedCreateWithoutBookmarksInput>;
+};
+export type FolderUpsertWithoutBookmarksInput = {
+    update: Prisma.XOR<Prisma.FolderUpdateWithoutBookmarksInput, Prisma.FolderUncheckedUpdateWithoutBookmarksInput>;
+    create: Prisma.XOR<Prisma.FolderCreateWithoutBookmarksInput, Prisma.FolderUncheckedCreateWithoutBookmarksInput>;
+    where?: Prisma.FolderWhereInput;
+};
+export type FolderUpdateToOneWithWhereWithoutBookmarksInput = {
+    where?: Prisma.FolderWhereInput;
+    data: Prisma.XOR<Prisma.FolderUpdateWithoutBookmarksInput, Prisma.FolderUncheckedUpdateWithoutBookmarksInput>;
+};
+export type FolderUpdateWithoutBookmarksInput = {
+    id?: Prisma.StringFieldUpdateOperationsInput | string;
+    folderName?: Prisma.StringFieldUpdateOperationsInput | string;
+    description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
+    isShared?: Prisma.BoolFieldUpdateOperationsInput | boolean;
+    sharedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null;
+    allowContribution?: Prisma.BoolFieldUpdateOperationsInput | boolean;
+    tags?: Prisma.FolderUpdatetagsInput | string[];
+    createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
+    updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
+    owner?: Prisma.ProfileUpdateOneRequiredWithoutFoldersNestedInput;
+    links?: Prisma.LinkUpdateManyWithoutFolderNestedInput;
+};
+export type FolderUncheckedUpdateWithoutBookmarksInput = {
+    id?: Prisma.StringFieldUpdateOperationsInput | string;
+    folderName?: Prisma.StringFieldUpdateOperationsInput | string;
+    description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
+    isShared?: Prisma.BoolFieldUpdateOperationsInput | boolean;
+    sharedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null;
+    allowContribution?: Prisma.BoolFieldUpdateOperationsInput | boolean;
+    tags?: Prisma.FolderUpdatetagsInput | string[];
+    createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
+    updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
+    ownerId?: Prisma.StringFieldUpdateOperationsInput | string;
+    links?: Prisma.LinkUncheckedUpdateManyWithoutFolderNestedInput;
 };
 export type FolderCreateManyOwnerInput = {
     id?: string;
-    title: string;
+    folderName: string;
     description?: string | null;
     isShared?: boolean;
+    sharedAt?: Date | string | null;
+    allowContribution?: boolean;
+    tags?: Prisma.FolderCreatetagsInput | string[];
     createdAt?: Date | string;
     updatedAt?: Date | string;
 };
 export type FolderUpdateWithoutOwnerInput = {
     id?: Prisma.StringFieldUpdateOperationsInput | string;
-    title?: Prisma.StringFieldUpdateOperationsInput | string;
+    folderName?: Prisma.StringFieldUpdateOperationsInput | string;
     description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     isShared?: Prisma.BoolFieldUpdateOperationsInput | boolean;
+    sharedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null;
+    allowContribution?: Prisma.BoolFieldUpdateOperationsInput | boolean;
+    tags?: Prisma.FolderUpdatetagsInput | string[];
     createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
     updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
     links?: Prisma.LinkUpdateManyWithoutFolderNestedInput;
+    bookmarks?: Prisma.BookmarkUpdateManyWithoutFolderNestedInput;
 };
 export type FolderUncheckedUpdateWithoutOwnerInput = {
     id?: Prisma.StringFieldUpdateOperationsInput | string;
-    title?: Prisma.StringFieldUpdateOperationsInput | string;
+    folderName?: Prisma.StringFieldUpdateOperationsInput | string;
     description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     isShared?: Prisma.BoolFieldUpdateOperationsInput | boolean;
+    sharedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null;
+    allowContribution?: Prisma.BoolFieldUpdateOperationsInput | boolean;
+    tags?: Prisma.FolderUpdatetagsInput | string[];
     createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
     updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
     links?: Prisma.LinkUncheckedUpdateManyWithoutFolderNestedInput;
+    bookmarks?: Prisma.BookmarkUncheckedUpdateManyWithoutFolderNestedInput;
 };
 export type FolderUncheckedUpdateManyWithoutOwnerInput = {
     id?: Prisma.StringFieldUpdateOperationsInput | string;
-    title?: Prisma.StringFieldUpdateOperationsInput | string;
+    folderName?: Prisma.StringFieldUpdateOperationsInput | string;
     description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     isShared?: Prisma.BoolFieldUpdateOperationsInput | boolean;
+    sharedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null;
+    allowContribution?: Prisma.BoolFieldUpdateOperationsInput | boolean;
+    tags?: Prisma.FolderUpdatetagsInput | string[];
     createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
     updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
 };
 export type FolderCountOutputType = {
     links: number;
+    bookmarks: number;
 };
 export type FolderCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
     links?: boolean | FolderCountOutputTypeCountLinksArgs;
+    bookmarks?: boolean | FolderCountOutputTypeCountBookmarksArgs;
 };
 export type FolderCountOutputTypeDefaultArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
     select?: Prisma.FolderCountOutputTypeSelect<ExtArgs> | null;
@@ -468,70 +672,91 @@ export type FolderCountOutputTypeDefaultArgs<ExtArgs extends runtime.Types.Exten
 export type FolderCountOutputTypeCountLinksArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
     where?: Prisma.LinkWhereInput;
 };
+export type FolderCountOutputTypeCountBookmarksArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+    where?: Prisma.BookmarkWhereInput;
+};
 export type FolderSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
     id?: boolean;
-    title?: boolean;
+    folderName?: boolean;
     description?: boolean;
     isShared?: boolean;
+    sharedAt?: boolean;
+    allowContribution?: boolean;
+    tags?: boolean;
     createdAt?: boolean;
     updatedAt?: boolean;
     ownerId?: boolean;
-    owner?: boolean | Prisma.UserDefaultArgs<ExtArgs>;
+    owner?: boolean | Prisma.ProfileDefaultArgs<ExtArgs>;
     links?: boolean | Prisma.Folder$linksArgs<ExtArgs>;
+    bookmarks?: boolean | Prisma.Folder$bookmarksArgs<ExtArgs>;
     _count?: boolean | Prisma.FolderCountOutputTypeDefaultArgs<ExtArgs>;
 }, ExtArgs["result"]["folder"]>;
 export type FolderSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
     id?: boolean;
-    title?: boolean;
+    folderName?: boolean;
     description?: boolean;
     isShared?: boolean;
+    sharedAt?: boolean;
+    allowContribution?: boolean;
+    tags?: boolean;
     createdAt?: boolean;
     updatedAt?: boolean;
     ownerId?: boolean;
-    owner?: boolean | Prisma.UserDefaultArgs<ExtArgs>;
+    owner?: boolean | Prisma.ProfileDefaultArgs<ExtArgs>;
 }, ExtArgs["result"]["folder"]>;
 export type FolderSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
     id?: boolean;
-    title?: boolean;
+    folderName?: boolean;
     description?: boolean;
     isShared?: boolean;
+    sharedAt?: boolean;
+    allowContribution?: boolean;
+    tags?: boolean;
     createdAt?: boolean;
     updatedAt?: boolean;
     ownerId?: boolean;
-    owner?: boolean | Prisma.UserDefaultArgs<ExtArgs>;
+    owner?: boolean | Prisma.ProfileDefaultArgs<ExtArgs>;
 }, ExtArgs["result"]["folder"]>;
 export type FolderSelectScalar = {
     id?: boolean;
-    title?: boolean;
+    folderName?: boolean;
     description?: boolean;
     isShared?: boolean;
+    sharedAt?: boolean;
+    allowContribution?: boolean;
+    tags?: boolean;
     createdAt?: boolean;
     updatedAt?: boolean;
     ownerId?: boolean;
 };
-export type FolderOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "title" | "description" | "isShared" | "createdAt" | "updatedAt" | "ownerId", ExtArgs["result"]["folder"]>;
+export type FolderOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "folderName" | "description" | "isShared" | "sharedAt" | "allowContribution" | "tags" | "createdAt" | "updatedAt" | "ownerId", ExtArgs["result"]["folder"]>;
 export type FolderInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-    owner?: boolean | Prisma.UserDefaultArgs<ExtArgs>;
+    owner?: boolean | Prisma.ProfileDefaultArgs<ExtArgs>;
     links?: boolean | Prisma.Folder$linksArgs<ExtArgs>;
+    bookmarks?: boolean | Prisma.Folder$bookmarksArgs<ExtArgs>;
     _count?: boolean | Prisma.FolderCountOutputTypeDefaultArgs<ExtArgs>;
 };
 export type FolderIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-    owner?: boolean | Prisma.UserDefaultArgs<ExtArgs>;
+    owner?: boolean | Prisma.ProfileDefaultArgs<ExtArgs>;
 };
 export type FolderIncludeUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-    owner?: boolean | Prisma.UserDefaultArgs<ExtArgs>;
+    owner?: boolean | Prisma.ProfileDefaultArgs<ExtArgs>;
 };
 export type $FolderPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
     name: "Folder";
     objects: {
-        owner: Prisma.$UserPayload<ExtArgs>;
+        owner: Prisma.$ProfilePayload<ExtArgs>;
         links: Prisma.$LinkPayload<ExtArgs>[];
+        bookmarks: Prisma.$BookmarkPayload<ExtArgs>[];
     };
     scalars: runtime.Types.Extensions.GetPayloadResult<{
         id: string;
-        title: string;
+        folderName: string;
         description: string | null;
         isShared: boolean;
+        sharedAt: Date | null;
+        allowContribution: boolean;
+        tags: string[];
         createdAt: Date;
         updatedAt: Date;
         ownerId: string;
@@ -587,17 +812,21 @@ export interface FolderDelegate<ExtArgs extends runtime.Types.Extensions.Interna
 }
 export interface Prisma__FolderClient<T, Null = never, ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
     readonly [Symbol.toStringTag]: "PrismaPromise";
-    owner<T extends Prisma.UserDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.UserDefaultArgs<ExtArgs>>): Prisma.Prisma__UserClient<runtime.Types.Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>;
+    owner<T extends Prisma.ProfileDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.ProfileDefaultArgs<ExtArgs>>): Prisma.Prisma__ProfileClient<runtime.Types.Result.GetResult<Prisma.$ProfilePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>;
     links<T extends Prisma.Folder$linksArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Folder$linksArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$LinkPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>;
+    bookmarks<T extends Prisma.Folder$bookmarksArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Folder$bookmarksArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$BookmarkPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>;
     then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): runtime.Types.Utils.JsPromise<TResult1 | TResult2>;
     catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): runtime.Types.Utils.JsPromise<T | TResult>;
     finally(onfinally?: (() => void) | undefined | null): runtime.Types.Utils.JsPromise<T>;
 }
 export interface FolderFieldRefs {
     readonly id: Prisma.FieldRef<"Folder", 'String'>;
-    readonly title: Prisma.FieldRef<"Folder", 'String'>;
+    readonly folderName: Prisma.FieldRef<"Folder", 'String'>;
     readonly description: Prisma.FieldRef<"Folder", 'String'>;
     readonly isShared: Prisma.FieldRef<"Folder", 'Boolean'>;
+    readonly sharedAt: Prisma.FieldRef<"Folder", 'DateTime'>;
+    readonly allowContribution: Prisma.FieldRef<"Folder", 'Boolean'>;
+    readonly tags: Prisma.FieldRef<"Folder", 'String[]'>;
     readonly createdAt: Prisma.FieldRef<"Folder", 'DateTime'>;
     readonly updatedAt: Prisma.FieldRef<"Folder", 'DateTime'>;
     readonly ownerId: Prisma.FieldRef<"Folder", 'String'>;
@@ -712,6 +941,17 @@ export type Folder$linksArgs<ExtArgs extends runtime.Types.Extensions.InternalAr
     take?: number;
     skip?: number;
     distinct?: Prisma.LinkScalarFieldEnum | Prisma.LinkScalarFieldEnum[];
+};
+export type Folder$bookmarksArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+    select?: Prisma.BookmarkSelect<ExtArgs> | null;
+    omit?: Prisma.BookmarkOmit<ExtArgs> | null;
+    include?: Prisma.BookmarkInclude<ExtArgs> | null;
+    where?: Prisma.BookmarkWhereInput;
+    orderBy?: Prisma.BookmarkOrderByWithRelationInput | Prisma.BookmarkOrderByWithRelationInput[];
+    cursor?: Prisma.BookmarkWhereUniqueInput;
+    take?: number;
+    skip?: number;
+    distinct?: Prisma.BookmarkScalarFieldEnum | Prisma.BookmarkScalarFieldEnum[];
 };
 export type FolderDefaultArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
     select?: Prisma.FolderSelect<ExtArgs> | null;
